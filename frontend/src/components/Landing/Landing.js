@@ -1,0 +1,20 @@
+import './Landing.scss';
+import { Link } from 'react-router-dom';
+
+
+const Landing = () => {
+  return (
+    <div className="landing-container">
+      <div className="landing-content">
+        <h1>Üdvözlünk a PéldaTárház oldalán</h1>
+        <p>Regisztrált felhasználóink számára bejelentkezés után érhető el az online számviteli példatárunk</p>
+        <div className="landing-btn-group">
+          <Link to='/login' className="btn btn-info">Belépés</Link>
+          <Link to='/register' className="btn btn-outline-info">Regisztráció</Link>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Landing

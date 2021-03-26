@@ -1,0 +1,30 @@
+.landing-container {
+  width: 100%;
+  height: calc(100vh - 56px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: #f3f3f3;
+
+  .landing-content{
+    flex-basis: 60%;
+    height: 45vh;
+    display: flex;
+    flex-direction: column;
+    margin-top: 5rem;
+    padding: 1rem;
+
+    & > h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .landing-btn-group{
+      margin-top: 2rem;
+
+      & > *:not(:first-child){
+        margin-left: 1.5rem;
+      }
+    }
+  }
+}

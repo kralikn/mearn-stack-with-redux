@@ -110,7 +110,7 @@ router.post('/register', (req, res) => {
 // @access  Private
 router.post('/newtopic', passport.authenticate('jwt', { session: false }), (req, res) => {
 
-  console.log(req.body)
+  // console.log(req.body)
 
   let errors = {};
 

@@ -1,0 +1,70 @@
+import axios from 'axios';
+import {
+  FETCH_TOPICS_REQUEST,
+  FETCH_TOPICS_SUCCESS,
+  FETCH_TOPICS_FAILURE,
+  POST_TOPICS_SUCCESS
+} from './topicTypes'
+
+export const fetchTopics = () => {
+  return (dispatch) => {
+    dispatch(fetchTopicsRequest())
+    axios
+      .get('/admin/topics')
+      .then(response => {
+        // response.data is the users
+        const topics = response.data
+        dispatch(fetchTopicsSuccess(topics))
+      })
+      .catch(error => {
+        // error.message is the error message
+        dispatch(fetchTopicsFailure(error.response.data))
+      })
+  }
+}
+
+export const postTopic = (newTopic) => {
+  return (dispatch) => {
+    dispatch(fetchTopicsRequest())
+    axios
+      .post('/admin/newtopic', newTopic)
+      .then(response => {
+        // response.data is the users
+        const topic = response.data
+        dispatch(postTopicsSuccess(topic))
+      })
+      .catch(error => {
+        console.log(error);
+        // error.message is the error message
+        dispatch(fetchTopicsFailure(error.response.data))
+      })
+  }
+}
+
+
+export const fetchTopicsRequest = () => {
+  return {
+    type: FETCH_TOPICS_REQUEST
+  }
+}
+
+export const fetchTopicsSuccess = topics => {
+  return {
+    type: FETCH_TOPICS_SUCCESS,
+    payload: topics
+  }
+}
+
+export const postTopicsSuccess = topic => {
+  return {
+    type: POST_TOPICS_SUCCESS,
+    payload: topic
+  }
+}
+
+export const fetchTopicsFailure = error => {
+  return {
+    type: FETCH_TOPICS_FAILURE,
+    payload: error
+  }
+}

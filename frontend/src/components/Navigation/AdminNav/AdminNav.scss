@@ -65,7 +65,19 @@
       list-style: none;
       height: 60px;
 
-      a {
+      // button {
+      //   border: none;
+      //   outline: none;
+      //   background: none;
+      //   margin-left: 16px;
+      // }
+      span {
+        margin-left: 16px;
+        cursor: pointer;
+      }
+
+      a,
+      span {
         text-decoration: none;
         color: rgba(255,255,255,.5);
         font-size: 18px;
@@ -76,9 +88,9 @@
         padding: 0 16px;
         border-radius: 4px;
 
-        span {
-          margin-left: 16px;
-        }
+        // span {
+        //   margin-left: 16px;
+        // }
 
         &:hover {
           color: rgba(255,255,255,.75);

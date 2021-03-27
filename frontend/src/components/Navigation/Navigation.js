@@ -11,8 +11,6 @@ const Navigation = () => {
 	const { isAuthenticated } = currentUser
 	const { isAdmin } = currentUser.user
 
-  // console.log(isAuthenticated, isAdmin);
-
   const onLogoutClick = (e) => {
 
     e.preventDefault();
@@ -21,9 +19,6 @@ const Navigation = () => {
     localStorage.removeItem('jwtToken');
     // Remove auth header for future requests
     setAuthToken(false);
-    // Set current user to {} which will set isAuthenticated to false
-
-    // dispatch(logoutUser({}))
 
     window.location.href = '/login';
 

@@ -1,16 +1,12 @@
-// import { useSelector } from 'react-redux'
+import './AdminDashboard.scss'
 
 const AdminDashboard = (props) => {
 
-  // const auth = useSelector(state => state.currentUser.isAuthenticated)
-  
-  // if(!auth){
-  //   props.history.push('/admin');
-  // }
+  console.log(props);
 
   return (
-    <div>
-      <h1>admin dashboard</h1>
+    <div className="admin-dashboard-container">
+      <h3>kezdő admin dashboard</h3>
     </div>
   )
 }

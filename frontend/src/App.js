@@ -11,6 +11,8 @@ import UserDashboard from './components/User/Dashboard/UserDashboard';
 import AdminLogin from './components/Admin/Login/AdminLogin';
 import AdminRegister from './components/Admin/Register/AdminRegister';
 import AdminDashboard from './components/Admin/Dashboard/AdminDashboard';
+import AdminTopics from './components/Admin/Dashboard/Topics/AdminTopics';
+import AdminUsers from './components/Admin/Dashboard/Users/AdminUsers';
 
 import setAuthToken from './utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
@@ -60,7 +62,9 @@ function App() {
           <PrivateRouteUser path='/dashboard/user' component={UserDashboard} />
           <Route exact path='/admin' component={AdminLogin} />
           <Route path='/admin/register' component={AdminRegister} />
-          <PrivateRouteAdmin path='/dashboard/admin' component={AdminDashboard} />
+          <PrivateRouteAdmin exact path='/dashboard/admin' component={AdminDashboard} />
+          <PrivateRouteAdmin exact path='/dashboard/admin/topics' component={AdminTopics} />
+          <PrivateRouteAdmin exact path='/dashboard/admin/users' component={AdminUsers} />
         </Switch>
       </Router>
     </Provider>

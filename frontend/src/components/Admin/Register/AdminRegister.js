@@ -1,13 +1,12 @@
 import { Form, Button, Row, Container } from 'react-bootstrap';
 import { useRef } from 'react';
-// import axios from 'axios';
 import classnames from 'classnames';
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setRegisterUser } from '../../../redux';
+import { setRegisterAdmin } from '../../../redux';
 
 
-const UserRegister = (props) => {
+const AdminRegister = (props) => {
 
   const currentUser = useSelector(state => state.currentUser)
   
@@ -16,7 +15,6 @@ const UserRegister = (props) => {
   }else if(currentUser.isAuthenticated && !currentUser.user.isAdmin){
     props.history.push('/dashboard/user');
   }
-
   
   const errors = useSelector(state => state.registerUser.error)
   const dispatch = useDispatch()
@@ -29,13 +27,13 @@ const UserRegister = (props) => {
 
     e.preventDefault()
 
-    const newUser = {
+    const newAdmin = {
       [refNameInput.current.name]: refNameInput.current.value,
       [refPasswordInput.current.name]: refPasswordInput.current.value,
       [refPassword2Input.current.name]: refPassword2Input.current.value
     }
 
-    dispatch(setRegisterUser(newUser, props.history))
+    dispatch(setRegisterAdmin(newAdmin, props.history))
 
     }
     
@@ -46,7 +44,7 @@ const UserRegister = (props) => {
       <Row className="row justify-content-center mt-5">
         <Form className="col-4">
           <Form.Group>
-            <Form.Label>Felhasználónév</Form.Label>
+            <Form.Label>Admin</Form.Label>
             <Form.Control type="name" name="name" ref={refNameInput} className={classnames(" form-control", {
               "is-invalid": name
             })}/>
@@ -75,4 +73,4 @@ const UserRegister = (props) => {
   )
 }
 
-export default UserRegister
+export default AdminRegister

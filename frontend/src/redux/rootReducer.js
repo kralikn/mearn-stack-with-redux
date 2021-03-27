@@ -1,8 +1,10 @@
-import { combineReducers } from 'redux'
-// import topicReducer from './topic/topicReducer'
+import { combineReducers } from 'redux';
+import userLoginReducer from './userLogin/userLoginReducer';
+import userRegisterReducer from './userRegister/userRegisterReducer';
 
 const rootReducer = combineReducers({
-  // topics: topicReducer
+  currentUser: userLoginReducer,
+  registerUser: userRegisterReducer
 })
 
 export default rootReducer

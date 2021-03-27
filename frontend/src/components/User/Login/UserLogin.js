@@ -1,13 +1,25 @@
 import { Form, Button, Row, Container } from 'react-bootstrap';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
+
+import { useSelector, useDispatch } from 'react-redux'
+import { setCurrentUser } from '../../../redux';
+
 import classnames from 'classnames';
-import axios from 'axios';
-import jwt_decode from 'jwt-decode';
-// import setAuthToken from '../../utils/setAuthToken';
+
 
 const UserLogin = (props) => {
 
-  const [errors, setErrors] = useState({})
+  const currentUser = useSelector(state => state.currentUser)
+  
+  if(currentUser.isAuthenticated && currentUser.user.isAdmin){
+    props.history.push('/dashboard/admin');
+  }else if(currentUser.isAuthenticated && !currentUser.user.isAdmin){
+    props.history.push('/dashboard/user');
+  }
+
+  const errors = useSelector(state => state.currentUser.error)
+  // const loading = useSelector(state => state.currentUser.loading)
+  const dispatch = useDispatch()
 
   const refNameInput = useRef(null);
   const refPasswordInput = useRef(null);
@@ -20,44 +32,11 @@ const UserLogin = (props) => {
       [refPasswordInput.current.name]: refPasswordInput.current.value,
     }
 
-    axios.post('/login', user)
-      .then(res => {
-        console.log(res.data)
-        // Save to localStorage
-        const { token } = res.data;
-        // Set token to ls
-        localStorage.setItem('jwtToken', token);
-        // Set token to Auth header
-        // setAuthToken(token);
-        // Decode token to get user data
-        const decoded = jwt_decode(token);
-        console.log(token);
-        console.log(decoded);
+    dispatch(setCurrentUser(user, props.history))
 
-        // setLogin(true)
-        // setDecoded(dec)
-        
-        //------------------------------------------------
-        // if(!isEmpty(errors)){
-          setErrors({})
-          refNameInput.current.value = "";
-          refPasswordInput.current.value = "";
-        // }
-        //------------------------------------------------
-        
-        props.history.push('/dashboard')
-
-      })
-      .catch(err => {
-        setErrors(err.response.data)
-        console.log(err.response.data)
-      })
-      
-    }
+  }
     
   const {name, password} = errors;
-
-
   return (
     <Container>
       <Row className="row justify-content-center mt-5">

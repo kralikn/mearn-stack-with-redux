@@ -1,8 +1,14 @@
 import './Landing.scss';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux'
 
 
-const Landing = () => {
+const Landing = (props) => {
+
+  const auth = useSelector(state => state.currentUser.isAuthenticated)
+  if(auth){
+    props.history.push('/dashboard/user')
+  };
   return (
     <div className="landing-container">
       <div className="landing-content">

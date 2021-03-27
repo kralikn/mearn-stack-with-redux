@@ -21,7 +21,7 @@ router.post('/register', (req, res) => {
 
   // Check Validation
   if (!isValid) {
-    console.log(errors)
+    // console.log(errors)
     return res.status(404).json(errors);
   }
 
@@ -85,8 +85,8 @@ router.post('/login', (req, res) => {
         const payload = { id: user.id, name: user.name, isAdmin: user.isAdmin }; // Create JWT Payload
         const secretOrKey = process.env.secretOrKey;
 
-        console.log(payload)
-        console.log(user)
+        // console.log(payload)
+        // console.log(user)
 
         // Sign Token
         jwt.sign(

@@ -19,7 +19,8 @@ import jwt_decode from 'jwt-decode';
 import { fetchUserLoginSuccess } from './redux';
 
 import { Provider } from 'react-redux';
-import store from './redux/store';
+import {store, persistor } from './redux/store';
+import { PersistGate } from 'redux-persist/integration/react'
 import PrivateRouteUser from './components/Common/PrivateRouteUser';
 import PrivateRouteAdmin from './components/Common/PrivateRouteAdmin';
 
@@ -53,20 +54,22 @@ if (localStorage.jwtToken) {
 function App() {
   return (
     <Provider store={store}>
-      <Router >
-        <Navigation />
-        <Switch>
-          <Route exact path='/' component={Landing} />
-          <Route path='/login' component={UserLogin} />
-          <Route path='/register' component={UserRegister} />
-          <PrivateRouteUser path='/dashboard/user' component={UserDashboard} />
-          <Route exact path='/admin' component={AdminLogin} />
-          <Route path='/admin/register' component={AdminRegister} />
-          <PrivateRouteAdmin exact path='/dashboard/admin' component={AdminDashboard} />
-          <PrivateRouteAdmin exact path='/dashboard/admin/topics' component={AdminTopics} />
-          <PrivateRouteAdmin exact path='/dashboard/admin/users' component={AdminUsers} />
-        </Switch>
-      </Router>
+      <PersistGate persistor={persistor}>
+        <Router >
+          <Navigation />
+          <Switch>
+            <Route exact path='/' component={Landing} />
+            <Route path='/login' component={UserLogin} />
+            <Route path='/register' component={UserRegister} />
+            <PrivateRouteUser path='/dashboard/user' component={UserDashboard} />
+            <Route exact path='/admin' component={AdminLogin} />
+            <Route path='/admin/register' component={AdminRegister} />
+            <PrivateRouteAdmin exact path='/dashboard/admin' component={AdminDashboard} />
+            <PrivateRouteAdmin exact path='/dashboard/admin/topics' component={AdminTopics} />
+            <PrivateRouteAdmin exact path='/dashboard/admin/users' component={AdminUsers} />
+          </Switch>
+        </Router>
+      </PersistGate>
     </Provider>
   );
 }

@@ -1,7 +1,16 @@
 import { combineReducers } from 'redux';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage'
+
 import userLoginReducer from './userLogin/userLoginReducer';
 import userRegisterReducer from './userRegister/userRegisterReducer';
 import topicReducer from './topic/topicReducer';
+
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['topics']
+}
 
 const rootReducer = combineReducers({
   currentUser: userLoginReducer,
@@ -9,4 +18,4 @@ const rootReducer = combineReducers({
   topics: topicReducer
 })
 
-export default rootReducer
+export default persistReducer(persistConfig, rootReducer)

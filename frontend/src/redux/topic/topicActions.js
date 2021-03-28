@@ -4,7 +4,9 @@ import {
   FETCH_TOPICS_SUCCESS,
   FETCH_TOPICS_FAILURE,
   POST_TOPICS_SUCCESS,
-  UPDATE_TOPICS
+  UPDATE_TOPICS,
+  DELETE_ERRORS,
+  EDIT_TOPICS_SUCCESS
 } from './topicTypes'
 
 export const fetchTopics = () => {
@@ -32,7 +34,27 @@ export const postTopic = (newTopic) => {
       .then(response => {
         // response.data is the users
         const topic = response.data
+        console.log(response.data)
         dispatch(postTopicsSuccess(topic))
+      })
+      .catch(error => {
+        console.log(error);
+        // error.message is the error message
+        dispatch(fetchTopicsFailure(error.response.data))
+      })
+  }
+}
+
+export const editPostTopic = (editTopic) => {
+  return (dispatch) => {
+    dispatch(fetchTopicsRequest())
+    axios
+      .post('/admin/topic', editTopic)
+      .then(response => {
+        // response.data is the users
+        const topic = response.data
+        console.log(response.data)
+        dispatch(editTopicsSuccess(topic))
       })
       .catch(error => {
         console.log(error);
@@ -83,6 +105,13 @@ export const postTopicsSuccess = topic => {
   }
 }
 
+export const editTopicsSuccess = topic => {
+  return {
+    type: EDIT_TOPICS_SUCCESS,
+    payload: topic
+  }
+}
+
 export const fetchTopicsFailure = error => {
   return {
     type: FETCH_TOPICS_FAILURE,
@@ -94,5 +123,11 @@ export const updateTopics = topicId => {
   return {
     type: UPDATE_TOPICS,
     payload: topicId
+  }
+}
+
+export const deleteErrors = () => {
+  return {
+    type: DELETE_ERRORS,
   }
 }

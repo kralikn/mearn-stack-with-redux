@@ -110,7 +110,7 @@ router.post('/register', (req, res) => {
 // @access  Private
 router.post('/topic', passport.authenticate('jwt', { session: false }), (req, res) => {
 
-  // console.log(req.body)
+  console.log(req.body)
 
   let errors = {};
 
@@ -121,24 +121,44 @@ router.post('/topic', passport.authenticate('jwt', { session: false }), (req, re
   //   return res.status(400).json(errors);
   // }
 
-  Topic.findOne({ title: req.body.title }).then(topic => {
-    if (topic) {
-      errors.name = 'Ez a topic már létre van hozva';
-      console.log(errors)
-      // return res.status(400).json(errors);
-      return res.json(errors);
-    } else {
+  if(req.body.id){
+    Topic.findOne({ _id: req.body.id })
+    .then(topic => {
+      if(topic){
+        console.log(topic)
+        Topic.findOneAndUpdate(
+          {_id: req.body.id },
+          {title: req.body.title },
+          { new: true }
+        )
+        .then(topic => {
+          console.log(topic)
+          res.json(topic)
+        })
+        .catch(err => res.json(err))
+      }
+    })
+  }else {
+    Topic.findOne({ title: req.body.title }).then(topic => {
+      if (topic) {
+        errors.msg = 'Ez már egy létező témakör';
+        errors.placeholder = req.body.title;
+        console.log(errors)
+        return res.status(400).json(errors);
+      } else {
+  
+        const newTopic = new Topic({
+          title: req.body.title,
+        });
+  
+        newTopic
+          .save()
+          .then(topic => res.json(topic))
+          .catch(err => console.log(err));
+      }
+    });
+  }
 
-      const newTopic = new Topic({
-        title: req.body.title,
-      });
-
-      newTopic
-        .save()
-        .then(topic => res.json(topic))
-        .catch(err => console.log(err));
-    }
-  });
 });
 
 

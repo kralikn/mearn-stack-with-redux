@@ -1,37 +1,55 @@
-import { Spinner, ListGroup, ButtonGroup, Button, Modal, Form, Col, Row } from 'react-bootstrap';
+import { Spinner, ListGroup, ButtonGroup, Button } from 'react-bootstrap';
 import { AiFillEdit, AiFillDelete, AiOutlineMore } from 'react-icons/ai';
 import { IoAdd } from 'react-icons/io5';
 import './AdminTopics.scss'
 
 import { useSelector, useDispatch } from 'react-redux';
-import { postTopic, deleteTopic } from '../../../../redux';
+import { postTopic, deleteTopic, deleteErrors, editPostTopic } from '../../../../redux';
 import { useState, useRef } from 'react';
+import NewModal from '../Modals/NewModal';
+import EditModal from '../Modals/EditModal';
 
 
 const AdminTopics = () => {
 
   const refTopicInput = useRef(null);
-
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
   const dispatch = useDispatch()
-
   const topics = useSelector(state => state.topics)
   const {loading, topicsArr, error} = topics
+
+  //newModal
+  const [showNewModal, setShowNewModal] = useState(false);
+  const handleShowNewModal = () => setShowNewModal(true);
+  
+  //editModal
+  const [showEditModal, setShowEditModal] = useState(false);
+  const handleShowEditModal = () => setShowEditModal(true);
+  const [editTopic, setEditTopic] = useState({
+    title: null,
+    id: null
+  });
 
   const handleDeleteTopic = (e) => {
 
     let topicId = { id: e.target.parentElement.parentElement.parentElement.getAttribute("data-topic-id")}
     dispatch(deleteTopic(topicId))
-    console.log(topicId);
+    
   }
+
+  const handleEditTopic = (e) => {
+
+    let topicId = e.target.parentElement.parentElement.parentElement.getAttribute("data-topic-id")
+    let topic = e.target.parentElement.parentElement.parentElement.textContent;
+    setEditTopic({title: topic, id: topicId})
+
+  }
+
+  // console.log(editTopic)
 
   let topicsContent;
 
-  if(loading && topicsArr === null){
+  // if(loading && topicsArr === null){
+  if(loading){
     topicsContent = <Spinner animation="border" variant="info" />
   }else if (!loading && topicsArr === null && error !== "") {
     topicsContent = <h4>hozz létre egy témakört</h4>
@@ -40,7 +58,7 @@ const AdminTopics = () => {
       <ListGroup>
         <ListGroup.Item variant="light">
           <h5>Témakörök</h5>
-          <Button variant="outline-success" onClick={handleShow} size="sm"><IoAdd /></Button>
+          <Button variant="outline-success" onClick={handleShowNewModal} size="sm"><IoAdd /></Button>
         </ListGroup.Item>
         {topicsArr.map((topic) => {
           return (<ListGroup.Item key={topic._id} data-topic-id={topic._id} variant="light">
@@ -48,7 +66,10 @@ const AdminTopics = () => {
               <div className="btn-container">
                 <Button variant="info" size="sm" className="first-btn"><AiOutlineMore /></Button>
                 <ButtonGroup size="sm">
-                  <Button variant="success"><AiFillEdit /></Button>
+                  <Button onClick={(e) => {
+                    handleEditTopic(e)
+                    handleShowEditModal()
+                  }} variant="success"><AiFillEdit /></Button>
                   <Button onClick={handleDeleteTopic}variant="danger"><AiFillDelete /></Button>
                 </ButtonGroup>
               </div>
@@ -63,37 +84,26 @@ const AdminTopics = () => {
       <div className="topics-container">
         <div className="topics">
           {topicsContent}
-          <Modal
-            show={show}
-            onHide={handleClose}
-            backdrop="static"
-            keyboard={false}
-          >
-            <Modal.Header closeButton>
-              <Modal.Title>Add meg az új témakört</Modal.Title>
-            </Modal.Header>
-            <Row className="justify-content-center">
-              <Col className="col-10">
-                <Form.Control name="title" type="text" ref={refTopicInput}/>
-              </Col>
-            </Row>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
-                Mégsem
-              </Button>
-              <Button
-                variant="success"
-                onClick={() => {
-                  dispatch(postTopic({
-                    [refTopicInput.current.name]: refTopicInput.current.value
-                  }))
-                  handleClose()
-              }}
-              >
-                Létrehozás
-              </Button>
-            </Modal.Footer>
-          </Modal>
+          <NewModal
+            setShowNewModal={setShowNewModal}
+            showNewModal={showNewModal}
+            refTopicInput={refTopicInput}
+            dispatch={dispatch}
+            postTopic={postTopic}
+            deleteErrors={deleteErrors}
+            error={error}
+            loading={loading}
+            />
+          <EditModal
+            // handleEditTopic={handleEditTopic}
+            setShowEditModal={setShowEditModal}
+            showEditModal={showEditModal}
+            refTopicInput={refTopicInput}
+            dispatch={dispatch}
+            postTopic={postTopic} 
+            editTopic={editTopic}         
+            editPostTopic={editPostTopic}
+          />
         </div>
         {/* <div className="tasks">
           <h3>tasks</h3>

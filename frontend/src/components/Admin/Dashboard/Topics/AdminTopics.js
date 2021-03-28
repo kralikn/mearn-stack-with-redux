@@ -4,7 +4,7 @@ import { IoAdd } from 'react-icons/io5';
 import './AdminTopics.scss'
 
 import { useSelector, useDispatch } from 'react-redux';
-import { postTopic } from '../../../../redux';
+import { postTopic, deleteTopic } from '../../../../redux';
 import { useState, useRef } from 'react';
 
 
@@ -22,6 +22,13 @@ const AdminTopics = () => {
   const topics = useSelector(state => state.topics)
   const {loading, topicsArr, error} = topics
 
+  const handleDeleteTopic = (e) => {
+
+    let topicId = { id: e.target.parentElement.parentElement.parentElement.getAttribute("data-topic-id")}
+    dispatch(deleteTopic(topicId))
+    console.log(topicId);
+  }
+
   let topicsContent;
 
   if(loading && topicsArr === null){
@@ -36,13 +43,13 @@ const AdminTopics = () => {
           <Button variant="outline-success" onClick={handleShow} size="sm"><IoAdd /></Button>
         </ListGroup.Item>
         {topicsArr.map((topic) => {
-          return (<ListGroup.Item variant="light">
+          return (<ListGroup.Item key={topic._id} data-topic-id={topic._id} variant="light">
               {topic.title}
               <div className="btn-container">
                 <Button variant="info" size="sm" className="first-btn"><AiOutlineMore /></Button>
                 <ButtonGroup size="sm">
                   <Button variant="success"><AiFillEdit /></Button>
-                  <Button variant="danger"><AiFillDelete /></Button>
+                  <Button onClick={handleDeleteTopic}variant="danger"><AiFillDelete /></Button>
                 </ButtonGroup>
               </div>
             </ListGroup.Item>)

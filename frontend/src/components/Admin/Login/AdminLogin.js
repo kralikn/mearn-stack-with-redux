@@ -18,10 +18,8 @@ const AdminLogin = (props) => {
   }
 
   const errors = useSelector(state => state.currentUser.error)
-  const loading = useSelector(state => state.currentUser.loading)
+  // const loading = useSelector(state => state.currentUser.loading)
   const dispatch = useDispatch()
-
-  console.log(loading);
 
   const refNameInput = useRef(null);
   const refPasswordInput = useRef(null);

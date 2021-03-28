@@ -17,7 +17,11 @@ app.use(express.urlencoded({extended:false}));
 // Connect to MongoDB
 const URI = process.env.mongoURI
 mongoose
-  .connect(URI, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })
+  .connect(URI, {
+    useFindAndModify: false,
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true })
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err));
 

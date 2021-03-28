@@ -108,7 +108,7 @@ router.post('/register', (req, res) => {
 // @route   POST /topic
 // @desc    Create new topic
 // @access  Private
-router.post('/newtopic', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/topic', passport.authenticate('jwt', { session: false }), (req, res) => {
 
   // console.log(req.body)
 
@@ -154,12 +154,48 @@ router.get('/topics', passport.authenticate('jwt', { session: false }), (req, re
     .catch(error => {
       res.send(error)
     })
-  
+});
 
-  // Topic.find({}).then(topics => {
-  //   res.send(topics);
-  // }).catch(error => {
-  //   res.status(500).send(error))
+// @route   DELETE /topic
+// @desc    Delete topic
+// @access  Private
+router.delete('/topic', passport.authenticate('jwt', { session: false }), (req, res) => {
+
+  console.log(req.body)
+
+  Topic.findOneAndRemove({ _id: req.body.id })
+    .then(() => {
+      // User.findOneAndRemove({ _id: req.user.id }).then(() =>
+        res.json({ success: true })
+    })
+    .catch(error => {
+      res.send(error)
+    })
+  
+        // res.json({ success: true })
+
+
+    // });
+
+  // let errors = {};
+
+  // Topic.findOne({ title: req.body.title }).then(topic => {
+  //   if (topic) {
+  //     errors.name = 'Ez a topic már létre van hozva';
+  //     console.log(errors)
+  //     // return res.status(400).json(errors);
+  //     return res.json(errors);
+  //   } else {
+
+  //     const newTopic = new Topic({
+  //       title: req.body.title,
+  //     });
+
+  //     newTopic
+  //       .save()
+  //       .then(topic => res.json(topic))
+  //       .catch(err => console.log(err));
+  //   }
   // });
 });
 

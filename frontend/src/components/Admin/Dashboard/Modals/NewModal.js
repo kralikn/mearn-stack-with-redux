@@ -5,6 +5,8 @@ import classnames from 'classnames';
 
 const NewModal = ({setShowNewModal, showNewModal, refTopicInput, dispatch, postTopic, error, loading, deleteErrors}) => {
 
+  console.log(error)
+
   const handleClose = () => {
     dispatch(deleteErrors())
     setShowNewModal(false)

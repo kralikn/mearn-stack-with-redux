@@ -7,6 +7,7 @@ const passport = require('passport');
 // Load Input Validation
 const validateRegisterInput = require('../validation/register');
 const validateLoginInput = require('../validation/login');
+const validateTopicInput = require('../validation/topic');
 
 // Load Admin model
 const Admin = require('../models/Admin');
@@ -112,14 +113,15 @@ router.post('/topic', passport.authenticate('jwt', { session: false }), (req, re
 
   console.log(req.body)
 
-  let errors = {};
+  // let errors = {};
 
-  // const { errors, isValid } = validateRegisterInput(req.body);
+  const { errors, isValid } = validateTopicInput(req.body);
 
   // // Check Validation
-  // if (!isValid) {
-  //   return res.status(400).json(errors);
-  // }
+  if (!isValid) {
+    errors.placeholder = req.body.title;
+    return res.status(400).json(errors);
+  }
 
   if(req.body.id){
     Topic.findOne({ _id: req.body.id })

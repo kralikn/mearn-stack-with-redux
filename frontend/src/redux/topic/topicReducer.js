@@ -70,7 +70,7 @@ const reducer = (state = initialState, action) => {
       let current = state.currentTopic;
       newArray[newArray.findIndex((topic) => topic._id === action.payload._id)] = action.payload
 
-      if(state.currentTopic._id === action.payload._id){
+      if(state.currentTopic && state.currentTopic._id === action.payload._id){
         current = action.payload
       }
 
@@ -88,7 +88,7 @@ const reducer = (state = initialState, action) => {
 
       let currentTop = state.currentTopic
 
-      if(currentTop._id === action.payload){
+      if(currentTop && currentTop._id === action.payload){
         currentTop = null
       }
 

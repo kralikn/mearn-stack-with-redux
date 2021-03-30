@@ -74,10 +74,12 @@ export const deleteTopic = (topic) => {
       .delete('/admin/topic', {data: topic} )
       .then(response => {
         const topic = response.data
+        console.log(topic)
         dispatch(updateTopics(topic.id))
       })
       .catch(error => {
-        dispatch(fetchTopicsFailure(error.response.data))
+        console.log(error)
+        dispatch(fetchTopicsFailure(error.response))
       })
   }
 }

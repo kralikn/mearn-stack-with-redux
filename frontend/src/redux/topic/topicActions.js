@@ -6,7 +6,9 @@ import {
   POST_TOPICS_SUCCESS,
   UPDATE_TOPICS,
   DELETE_ERRORS,
-  EDIT_TOPICS_SUCCESS
+  EDIT_TOPICS_SUCCESS,
+  EDIT_TOPIC,
+  SET_CURRENT_TOPIC
 } from './topicTypes'
 
 export const fetchTopics = () => {
@@ -34,7 +36,6 @@ export const postTopic = (newTopic) => {
       .then(response => {
         // response.data is the users
         const topic = response.data
-        console.log(response.data)
         dispatch(postTopicsSuccess(topic))
       })
       .catch(error => {
@@ -74,16 +75,20 @@ export const deleteTopic = (topicId) => {
       .then(response => {
         console.log(response.data);
         // response.data is the users
-        // const topic = response.data
-        dispatch(updateTopics(topicId.id))
+        const topic = response.data
+        console.log(topic)
+        dispatch(updateTopics(topic.id))
       })
       .catch(error => {
         console.log(error);
-        // error.message is the error message
-        // dispatch(fetchTopicsFailure(error.response.data))
+        dispatch(fetchTopicsFailure(error.response.data))
       })
   }
 }
+
+// export const currentTopic = (topic) => {
+
+// }
 
 export const fetchTopicsRequest = () => {
   return {
@@ -112,6 +117,13 @@ export const editTopicsSuccess = topic => {
   }
 }
 
+export const editTopic = topic => {
+  return {
+    type: EDIT_TOPIC,
+    payload: topic
+  }
+}
+
 export const fetchTopicsFailure = error => {
   return {
     type: FETCH_TOPICS_FAILURE,
@@ -123,6 +135,13 @@ export const updateTopics = topicId => {
   return {
     type: UPDATE_TOPICS,
     payload: topicId
+  }
+}
+
+export const setCurrentTopic = topic => {
+  return {
+    type: SET_CURRENT_TOPIC,
+    payload: topic
   }
 }
 

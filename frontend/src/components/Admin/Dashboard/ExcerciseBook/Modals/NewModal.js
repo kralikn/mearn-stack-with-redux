@@ -1,14 +1,24 @@
-import { useState } from 'react';
-import { Button, Modal, Form, Col, Row, Spinner } from 'react-bootstrap';
+import { Button, Modal, Form, Col, Row } from 'react-bootstrap';
 import classnames from 'classnames';
+import { useRef } from 'react';
 
 
-const NewModal = ({setShowNewModal, showNewModal, refTopicInput, dispatch, postTopic, error, loading, deleteErrors}) => {
+const NewModal = ({
+  setShowNewModal,
+  showNewModal,
+  dispatch,
+  postTopic,
+  postTask,
+  error,
+  loading,
+  deleteErrors,
+  modalData
+}) => {
 
-  console.log(error)
+  const refModalInput = useRef(null);
 
   const handleClose = () => {
-    dispatch(deleteErrors())
+    // dispatch(deleteErrors())
     setShowNewModal(false)
   };
 
@@ -20,15 +30,16 @@ const NewModal = ({setShowNewModal, showNewModal, refTopicInput, dispatch, postT
       keyboard={false}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Add meg az új témakört</Modal.Title>
+        <Modal.Title>
+          {modalData.title ? modalData.title : null}
+        </Modal.Title>
       </Modal.Header>
       <Row className="justify-content-center">
         <Col className="col-10">
-          {/* <Form.Control name="title" type="text" ref={refTopicInput}/> */}
           <Form.Control
             name="title"
             type="text"
-            ref={refTopicInput}
+            ref={refModalInput}
             placeholder={error ? error.placeholder : null}
             className={classnames(" form-control", {
               "is-invalid": error
@@ -38,16 +49,20 @@ const NewModal = ({setShowNewModal, showNewModal, refTopicInput, dispatch, postT
         </Col>
       </Row>
       <Modal.Footer>
-        {/* <Button onClick={handleClose} variant="secondary">
-          Mégsem
-        </Button> */}
         <Button
           variant="success"
           onClick={() => {
-            dispatch(postTopic({
-              [refTopicInput.current.name]: refTopicInput.current.value
-            }))
-            refTopicInput.current.value = null
+            if(modalData.dispatch === "topic"){
+              dispatch(postTopic({
+                [refModalInput.current.name]: refModalInput.current.value
+              }))
+              refModalInput.current.value = null
+            }else if (modalData.dispatch === "task"){
+              dispatch(postTask({
+                [refModalInput.current.name]: refModalInput.current.value
+              }))
+              refModalInput.current.value = null
+            }
         }}
         >
           Küldés

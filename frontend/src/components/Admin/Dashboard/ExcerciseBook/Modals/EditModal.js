@@ -1,9 +1,20 @@
+import { useRef } from 'react';
 import { Button, Modal, Form, Col, Row } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 
 
-const EditModal = ({setShowEditModal, showEditModal, refTopicInput, dispatch, postTopic, handleEditTopic, editTopic, editPostTopic}) => {
+const EditModal = ({setShowEditModal, showEditModal, dispatch,  handleEditTopic, editTopicFunction, editPostTopic}) => {
 
-  const handleClose = () => setShowEditModal(false);
+  const handleClose = () => {
+    dispatch(editTopicFunction())
+    setShowEditModal(false)
+  };
+
+  const refModalInput = useRef(null);
+
+  const topics = useSelector(state => state.topics)
+  const { editTopic} = topics
+
 
   return (
     <Modal
@@ -20,24 +31,20 @@ const EditModal = ({setShowEditModal, showEditModal, refTopicInput, dispatch, po
           <Form.Control
             name="title"
             type="text"
-            ref={refTopicInput}
-            placeholder={editTopic.title}
+            ref={refModalInput}
+            placeholder={editTopic ? editTopic.title : null}
           />
         </Col>
       </Row>
       <Modal.Footer>
-        {/* <Button variant="secondary" onClick={handleClose}>
-          Mégsem
-        </Button> */}
         <Button
           variant="success"
           onClick={() => {
             dispatch(editPostTopic({
-              title: refTopicInput.current.value,
-              id: editTopic.id
+              title: refModalInput.current.value,
+              id: editTopic._id
             }))
-            refTopicInput.current.value = null
-            editTopic.title = null
+            refModalInput.current.value = null
         }}
         >
           Frissítés

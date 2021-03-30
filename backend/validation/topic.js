@@ -15,10 +15,6 @@ module.exports = function validateTopicInput(data) {
     errors.msg = 'A témakör kitöltése kötelező';
   }
 
-  // if (Validator.isEmpty(data.password)) {
-  //   errors.password = 'A jelszó kitöltése kötelező';
-  // }
-
   return {
     errors,
     isValid: isEmpty(errors)

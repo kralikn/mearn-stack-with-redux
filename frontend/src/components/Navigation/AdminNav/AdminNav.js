@@ -31,7 +31,7 @@ const AdminNav = ({onLogoutClick}) => {
         <ul className='nav-menu-items' onClick={showSidebar}>
           <li className="nav-text">
             <Link
-              to='/dashboard/admin/topics'
+              to='/dashboard/admin/excercises'
               className="nav-link"
               onClick={() => dispatch(fetchTopics())}
             >

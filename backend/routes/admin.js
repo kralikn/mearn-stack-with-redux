@@ -15,6 +15,9 @@ const Admin = require('../models/Admin');
 // Load Topic model
 const Topic = require('../models/Topic');
 
+// Load Task model
+const Task = require('../models/Task');
+
 // @route   POST /login
 // @desc    Login admin
 // @access  Public
@@ -41,8 +44,6 @@ router.post('/', (req, res) => {
     // Check Password
     bcrypt.compare(password, admin.password).then(isMatch => {
       if (isMatch) {
-
-        // res.json({msg: 'Sikeres belépés'})
 
         // User Matched
         const payload = { id: admin.id, name: admin.name, isAdmin: admin.isAdmin}; // Create JWT Payload
@@ -111,13 +112,9 @@ router.post('/register', (req, res) => {
 // @access  Private
 router.post('/topic', passport.authenticate('jwt', { session: false }), (req, res) => {
 
-  console.log(req.body)
-
-  // let errors = {};
-
   const { errors, isValid } = validateTopicInput(req.body);
 
-  // // Check Validation
+  // Check Validation
   if (!isValid) {
     errors.placeholder = req.body.title;
     return res.status(400).json(errors);
@@ -128,6 +125,7 @@ router.post('/topic', passport.authenticate('jwt', { session: false }), (req, re
     .then(topic => {
       if(topic){
         console.log(topic)
+
         Topic.findOneAndUpdate(
           {_id: req.body.id },
           {title: req.body.title },
@@ -163,6 +161,15 @@ router.post('/topic', passport.authenticate('jwt', { session: false }), (req, re
 
 });
 
+// @route   POST /task
+// @desc    Create new task
+// @access  Private
+router.post('/task', passport.authenticate('jwt', { session: false }), (req, res) => {
+  
+  console.log(req.user)
+
+});
+
 
 // @route   GET /all topic
 // @desc    get all topic
@@ -183,42 +190,16 @@ router.get('/topics', passport.authenticate('jwt', { session: false }), (req, re
 // @access  Private
 router.delete('/topic', passport.authenticate('jwt', { session: false }), (req, res) => {
 
-  console.log(req.body)
-
   Topic.findOneAndRemove({ _id: req.body.id })
     .then(() => {
-      // User.findOneAndRemove({ _id: req.user.id }).then(() =>
-        res.json({ success: true })
+        res.json({ success: true, id: req.body.id })
+        console.log("siker")
     })
     .catch(error => {
       res.send(error)
+      console.log("hiba")
     })
-  
-        // res.json({ success: true })
 
-
-    // });
-
-  // let errors = {};
-
-  // Topic.findOne({ title: req.body.title }).then(topic => {
-  //   if (topic) {
-  //     errors.name = 'Ez a topic már létre van hozva';
-  //     console.log(errors)
-  //     // return res.status(400).json(errors);
-  //     return res.json(errors);
-  //   } else {
-
-  //     const newTopic = new Topic({
-  //       title: req.body.title,
-  //     });
-
-  //     newTopic
-  //       .save()
-  //       .then(topic => res.json(topic))
-  //       .catch(err => console.log(err));
-  //   }
-  // });
 });
 
 // @route   GET /admin/current

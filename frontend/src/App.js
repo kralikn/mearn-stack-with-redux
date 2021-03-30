@@ -11,7 +11,7 @@ import UserDashboard from './components/User/Dashboard/UserDashboard';
 import AdminLogin from './components/Admin/Login/AdminLogin';
 import AdminRegister from './components/Admin/Register/AdminRegister';
 import AdminDashboard from './components/Admin/Dashboard/AdminDashboard';
-import AdminTopics from './components/Admin/Dashboard/Topics/AdminTopics';
+// import AdminTopics from './components/Admin/Dashboard/Topics/AdminTopics';
 import AdminUsers from './components/Admin/Dashboard/Users/AdminUsers';
 
 import setAuthToken from './utils/setAuthToken';
@@ -23,6 +23,7 @@ import {store, persistor } from './redux/store';
 import { PersistGate } from 'redux-persist/integration/react'
 import PrivateRouteUser from './components/Common/PrivateRouteUser';
 import PrivateRouteAdmin from './components/Common/PrivateRouteAdmin';
+import ExcerciseBook from './components/Admin/Dashboard/ExcerciseBook/ExcerciseBook';
 
 // Check for token
 if (localStorage.jwtToken) {
@@ -65,7 +66,8 @@ function App() {
             <Route exact path='/admin' component={AdminLogin} />
             <Route path='/admin/register' component={AdminRegister} />
             <PrivateRouteAdmin exact path='/dashboard/admin' component={AdminDashboard} />
-            <PrivateRouteAdmin exact path='/dashboard/admin/topics' component={AdminTopics} />
+            <PrivateRouteAdmin exact path='/dashboard/admin/excercises' component={ExcerciseBook} />
+            {/* <PrivateRouteAdmin exact path='/dashboard/admin/topics' component={AdminTopics} /> */}
             <PrivateRouteAdmin exact path='/dashboard/admin/users' component={AdminUsers} />
           </Switch>
         </Router>

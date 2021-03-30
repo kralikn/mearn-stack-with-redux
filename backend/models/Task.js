@@ -2,7 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // Create Schema
-const TopicSchema = new Schema({
+const TaskSchema = new Schema({
+    topic: {
+      type: Schema.Types.ObjectId,
+      ref: 'topics'
+    },
     title: {
       type: String,
       required: true
@@ -10,7 +14,7 @@ const TopicSchema = new Schema({
     tasks: [
       {
         title: {
-          type: String
+          type: String,
         }
       }
     ]
@@ -20,4 +24,4 @@ const TopicSchema = new Schema({
   }
 );
 
-module.exports = Topic = mongoose.model('topics', TopicSchema);
+module.exports = Task = mongoose.model('tasks', TaskSchema);

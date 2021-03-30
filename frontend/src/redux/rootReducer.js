@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage'
 import userLoginReducer from './userLogin/userLoginReducer';
 import userRegisterReducer from './userRegister/userRegisterReducer';
 import topicReducer from './topic/topicReducer';
+// import taskReducer from './task/taksReducer';
 
 const persistConfig = {
   key: 'root',

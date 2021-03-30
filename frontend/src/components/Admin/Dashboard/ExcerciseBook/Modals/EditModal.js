@@ -13,7 +13,7 @@ const EditModal = ({setShowEditModal, showEditModal, dispatch,  handleEditTopic,
   const refModalInput = useRef(null);
 
   const topics = useSelector(state => state.topics)
-  const { editTopic} = topics
+  const { editTopic } = topics
 
 
   return (
@@ -45,6 +45,7 @@ const EditModal = ({setShowEditModal, showEditModal, dispatch,  handleEditTopic,
               id: editTopic._id
             }))
             refModalInput.current.value = null
+            handleClose()
         }}
         >
           Frissítés

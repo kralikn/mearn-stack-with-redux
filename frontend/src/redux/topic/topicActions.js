@@ -1,9 +1,13 @@
 import axios from 'axios';
 import {
-  FETCH_TOPICS_REQUEST,
-  FETCH_TOPICS_SUCCESS,
-  FETCH_TOPICS_FAILURE,
+
+//get all topics
+  GET_TOPICS_REQUEST,
+  GET_TOPICS_SUCCESS,
+  GET_TOPICS_FAILURE,
+
   POST_TOPICS_SUCCESS,
+
   UPDATE_TOPICS,
   DELETE_ERRORS,
   EDIT_TOPICS_SUCCESS,
@@ -11,98 +15,98 @@ import {
   SET_CURRENT_TOPIC
 } from './topicTypes'
 
+
+//get all topics (getAllTopics)
 export const fetchTopics = () => {
   return (dispatch) => {
     dispatch(fetchTopicsRequest())
     axios
       .get('/admin/topics')
       .then(response => {
-        // response.data is the users
         const topics = response.data
         dispatch(fetchTopicsSuccess(topics))
       })
       .catch(error => {
-        // error.message is the error message
         dispatch(fetchTopicsFailure(error.response.data))
       })
   }
 }
 
-export const postTopic = (newTopic) => {
+
+//create topic
+export const postTopic = (topic) => {
   return (dispatch) => {
     dispatch(fetchTopicsRequest())
     axios
-      .post('/admin/topic', newTopic)
+      .post('/admin/topic', topic)
       .then(response => {
-        // response.data is the users
         const topic = response.data
         dispatch(postTopicsSuccess(topic))
       })
       .catch(error => {
-        console.log(error);
-        // error.message is the error message
         dispatch(fetchTopicsFailure(error.response.data))
       })
   }
 }
 
-export const editPostTopic = (editTopic) => {
+// edit topic (editTopic)
+export const editPostTopic = (topic) => {
   return (dispatch) => {
     dispatch(fetchTopicsRequest())
     axios
-      .post('/admin/topic', editTopic)
+      .post('/admin/topic', topic)
       .then(response => {
-        // response.data is the users
         const topic = response.data
-        console.log(response.data)
         dispatch(editTopicsSuccess(topic))
       })
       .catch(error => {
         console.log(error);
-        // error.message is the error message
         dispatch(fetchTopicsFailure(error.response.data))
       })
   }
 }
 
-
-//TODO: hibakezelés frontend oldalon (modalban megjeleníteni pl a már létező témakört és a validálás elkészítése utáni hibaüzenetet is)
-export const deleteTopic = (topicId) => {
+// delete topic
+export const deleteTopic = (topic) => {
   return (dispatch) => {
     dispatch(fetchTopicsRequest())
     axios
-      .delete('/admin/topic', {data: topicId} )
+      .delete('/admin/topic', {data: topic} )
       .then(response => {
-        console.log(response.data);
-        // response.data is the users
         const topic = response.data
-        console.log(topic)
         dispatch(updateTopics(topic.id))
       })
       .catch(error => {
-        console.log(error);
         dispatch(fetchTopicsFailure(error.response.data))
       })
   }
 }
 
-// export const currentTopic = (topic) => {
 
-// }
-
+// loading
 export const fetchTopicsRequest = () => {
   return {
-    type: FETCH_TOPICS_REQUEST
+    type: GET_TOPICS_REQUEST
   }
 }
 
+//sikeres letöltés
 export const fetchTopicsSuccess = topics => {
   return {
-    type: FETCH_TOPICS_SUCCESS,
+    type: GET_TOPICS_SUCCESS,
     payload: topics
   }
 }
 
+//error
+export const fetchTopicsFailure = error => {
+  return {
+    type: GET_TOPICS_FAILURE,
+    payload: error
+  }
+}
+
+// success post
 export const postTopicsSuccess = topic => {
   return {
     type: POST_TOPICS_SUCCESS,
@@ -110,6 +114,7 @@ export const postTopicsSuccess = topic => {
   }
 }
 
+// success edit
 export const editTopicsSuccess = topic => {
   return {
     type: EDIT_TOPICS_SUCCESS,
@@ -117,6 +122,17 @@ export const editTopicsSuccess = topic => {
   }
 }
 
+// update topicArr after delete topic 
+export const updateTopics = topic => {
+  return {
+    type: UPDATE_TOPICS,
+    payload: topic
+  }
+}
+
+
+//---------------------------------------------------
+// a témakör melletti szerkesztésre kattintás
 export const editTopic = topic => {
   return {
     type: EDIT_TOPIC,
@@ -124,20 +140,7 @@ export const editTopic = topic => {
   }
 }
 
-export const fetchTopicsFailure = error => {
-  return {
-    type: FETCH_TOPICS_FAILURE,
-    payload: error
-  }
-}
-
-export const updateTopics = topicId => {
-  return {
-    type: UPDATE_TOPICS,
-    payload: topicId
-  }
-}
-
+// a témakör mellett 3 pontra kattintás
 export const setCurrentTopic = topic => {
   return {
     type: SET_CURRENT_TOPIC,

@@ -1,26 +1,42 @@
-.topics-container {
+.admin-dashboard-container {
   display: flex;
-  justify-content: space-between;
-
-  .topics,
-  .tasks {
-    flex-basis: 25%;
-  }
-
-  .task-form-container {
+  
+  .topics-container {
+    position: relative;
     flex-basis: 50%;
-  }
-
-  .list-group-item {
     display: flex;
     justify-content: space-between;
-    padding: .25rem .5rem;
-    font-size: .8rem;
 
-    .first-btn {
-      margin-right: 5px;
+    .spinner{
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateY(-50%);
+      width: 60px;
+      height: 60px;
+    }
+
+    .topics,
+    .tasks {
+      flex-basis: 50%;
+    }
+    
+    .list-group-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: .25rem .5rem;
+      font-size: .8rem;
+
+      .first-btn {
+        margin-right: 5px;
+      }
     }
   }
+}
+
+.task-form-container {
+  flex-basis: 50%;
 }
 
 .modal-header {

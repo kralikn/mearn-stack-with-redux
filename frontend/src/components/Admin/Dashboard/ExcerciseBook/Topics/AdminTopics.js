@@ -29,7 +29,6 @@ const AdminTopics = ({setShowTasksList, modalData, setModalData}) => {
   const handleDeleteTopic = (e) => {
 
     let topicId = { id: e.target.parentElement.parentElement.parentElement.getAttribute("data-topic-id")}
-    console.log(topicId)
     dispatch(deleteTopic(topicId))
 
   }
@@ -44,11 +43,11 @@ const AdminTopics = ({setShowTasksList, modalData, setModalData}) => {
 
   let topicsContent;
 
-  if(loading){
-    topicsContent = <Spinner animation="border" variant="info" />
-  }else if (!loading && topicsArr === null && error !== "") {
-    topicsContent = <h4>hozz létre egy témakört</h4>
-  } else {
+  // if(loading){
+  //   topicsContent = <Spinner className="spinner" animation="border" variant="info" />
+  // }else if (!loading && topicsArr === null && error !== "") {
+  //   topicsContent = <h4>hozz létre egy témakört</h4>
+  // } else {
     topicsContent = (
       <ListGroup>
         <ListGroup.Item variant="light">
@@ -90,7 +89,7 @@ const AdminTopics = ({setShowTasksList, modalData, setModalData}) => {
         })}
       </ListGroup>
     )
-  }
+  // }
 
   return (
     <div className="topics">

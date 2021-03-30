@@ -1,14 +1,28 @@
 import {
-  FETCH_TOPICS_REQUEST,
-  FETCH_TOPICS_SUCCESS,
-  FETCH_TOPICS_FAILURE,
+
+//get all topics
+  GET_TOPICS_REQUEST,
+  GET_TOPICS_SUCCESS,
+  GET_TOPICS_FAILURE,
+
   POST_TOPICS_SUCCESS,
-  UPDATE_TOPICS,
-  DELETE_ERRORS,
+
   EDIT_TOPICS_SUCCESS,
+
+  UPDATE_TOPICS,
+
+  DELETE_ERRORS,
   EDIT_TOPIC,
   SET_CURRENT_TOPIC
 } from './topicTypes'
+
+// const initialState = {
+//   loading: false,
+//   topics: [],
+//   current: null,
+//   edit: null,
+//   error: null
+// }
 
 const initialState = {
   loading: false,
@@ -20,18 +34,27 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_TOPICS_REQUEST:
+    //get all topics
+    case GET_TOPICS_REQUEST:
       return {
         ...state,
         loading: true
       }
-    case FETCH_TOPICS_SUCCESS:
+    case GET_TOPICS_SUCCESS:
       return {
         ...state,
         loading: false,
         topicsArr: action.payload,
         error: null
       }
+    case GET_TOPICS_FAILURE:
+    return {
+      ...state,
+      loading: false,
+      error: action.payload
+    }
+
+    // create succes response handle
     case POST_TOPICS_SUCCESS:
       return {
         ...state,
@@ -39,70 +62,74 @@ const reducer = (state = initialState, action) => {
         topicsArr: [...state.topicsArr, action.payload],
         error: null
       }
+
+    // edit topic
     case EDIT_TOPICS_SUCCESS:
-      console.log(action.payload)
+
       let newArray = [...state.topicsArr]
-     
+      let current = state.currentTopic;
       newArray[newArray.findIndex((topic) => topic._id === action.payload._id)] = action.payload
 
-      // let safeCurrTop =state.currentTopic;
-      // if(state.currentTopic._id === action.payload._id){
-      //   safeCurrTop = action.payload
-      // }
+      if(state.currentTopic._id === action.payload._id){
+        current = action.payload
+      }
 
       return {
         ...state,
         loading: false,
         topicsArr: newArray,
-        // currentTopic: safeCurrTop,
+        currentTopic: current,
         editTopic: null,
         error: null
       }
+
+      // update topicArr after delete topic 
+      case UPDATE_TOPICS:
+
+      let currentTop = state.currentTopic
+
+      if(currentTop._id === action.payload){
+        currentTop = null
+      }
+
+      return {
+        ...state,
+        loading: false,
+        topicsArr: state.topicsArr.filter(topic => topic._id !== action.payload),
+        currentTopic: currentTop,
+        error: null
+      }
+    // a témakör melletti szerkesztésre kattintás
     case EDIT_TOPIC:
 
       let editTop;
-
+      // let curr = state.currentTopic;
       if(!action.payload){
         editTop = null
       }else{
         let editArray = [...state.topicsArr]
         editTop = editArray[editArray.findIndex((topic) => topic._id === action.payload)]
       }
-      return {
-        ...state,
-        editTopic: editTop
-      }
-    case UPDATE_TOPICS:
-
-    // let currTopUdpate = state.currentTopic
-    // console.log(currTopUdpate._id === action.payload)
-    // // console.log(currTopUdpate)
-    // console.log(action.payload)
-
-      // if(currTopUdpate._id === action.payload){
-      //   console.log("egyezünk")
-      //   currTopUdpate = null
+      // if(state.currentTopic._id === action.payload){
+      //   curr = editTop
+      //   console.log("egyenlőség")
       // }
 
+      // let editArray = [...state.topicsArr]
+      // editTop = editArray[editArray.findIndex((topic) => topic._id === action.payload)]
+      
       return {
         ...state,
-        loading: false,
-        topicsArr: state.topicsArr.filter(topic => topic._id !== action.payload),
-        // currentTopic: currTopUdpate,
-        error: null
-      }
-    case FETCH_TOPICS_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        // topicsArr: state.topicsArr,
-        error: action.payload
+        editTopic: editTop,
+        // currentTopic: curr,
       }
     case DELETE_ERRORS:
       return {
         ...state,
         error: null
       }
+
+    // a témakör mellett 3 pontra kattintás
     case SET_CURRENT_TOPIC:
       
       // let currentTopic = [...state.topicsArr].filter(topic => topic._id === action.payload)

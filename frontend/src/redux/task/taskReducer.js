@@ -11,8 +11,6 @@ import {
 
   UPDATE_TOPICS,
 
-  DELETE_CURRENT_TOPICS,
-
   DELETE_ERRORS,
   EDIT_TOPIC,
   SET_CURRENT_TOPIC
@@ -69,43 +67,37 @@ const reducer = (state = initialState, action) => {
     case EDIT_TOPICS_SUCCESS:
 
       let newArray = [...state.topicsArr]
-      // let current = state.currentTopic;
+      let current = state.currentTopic;
       newArray[newArray.findIndex((topic) => topic._id === action.payload._id)] = action.payload
 
-      // if(state.currentTopic && state.currentTopic._id === action.payload._id){
-      //   current = action.payload
-      // }
+      if(state.currentTopic && state.currentTopic._id === action.payload._id){
+        current = action.payload
+      }
 
       return {
         ...state,
         loading: false,
         topicsArr: newArray,
-        // currentTopic: current,
-        // editTopic: null,
+        currentTopic: current,
+        editTopic: null,
         error: null
       }
 
-      // update topicArr after delete topic (ellenőrizve / kell e később a currentTopic?)
+      // update topicArr after delete topic 
       case UPDATE_TOPICS:
-        
-      // let currentTop = state.currentTopic
 
-      // if(currentTop && currentTop._id === action.payload){
-      //   currentTop = null
-      // }
+      let currentTop = state.currentTopic
+
+      if(currentTop && currentTop._id === action.payload){
+        currentTop = null
+      }
 
       return {
         ...state,
         loading: false,
         topicsArr: state.topicsArr.filter(topic => topic._id !== action.payload),
-        // currentTopic: currentTop,
+        currentTopic: currentTop,
         error: null
-      }
-      case DELETE_CURRENT_TOPICS:
-
-      return {
-        ...state,
-        currentTopic: null,
       }
     // a témakör melletti szerkesztésre kattintás
     case EDIT_TOPIC:
@@ -144,7 +136,7 @@ const reducer = (state = initialState, action) => {
       // console.log(action.payload)
       let topArray = [...state.topicsArr]
      
-      let currTop = topArray[topArray.findIndex((topic) => topic._id === action.payload.id)]
+      let currTop = topArray[topArray.findIndex((topic) => topic._id === action.payload)]
       // currentTopic.filter(topic => topic._id === action.payload)
 
       return {

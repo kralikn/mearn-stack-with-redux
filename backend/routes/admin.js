@@ -8,6 +8,7 @@ const passport = require('passport');
 const validateRegisterInput = require('../validation/register');
 const validateLoginInput = require('../validation/login');
 const validateTopicInput = require('../validation/topic');
+const validateTaskInput = require('../validation/task');
 
 // Load Admin model
 const Admin = require('../models/Admin');
@@ -124,7 +125,7 @@ router.post('/topic', passport.authenticate('jwt', { session: false }), (req, re
     Topic.findOne({ _id: req.body.id })
     .then(topic => {
       if(topic){
-        console.log(topic)
+        // console.log(topic)
 
         Topic.findOneAndUpdate(
           {_id: req.body.id },
@@ -154,7 +155,7 @@ router.post('/topic', passport.authenticate('jwt', { session: false }), (req, re
         newTopic
           .save()
           .then(topic => res.json(topic))
-          .catch(err => console.log(err));
+          .catch(err => res.json(err));
       }
     });
   }
@@ -166,7 +167,43 @@ router.post('/topic', passport.authenticate('jwt', { session: false }), (req, re
 // @access  Private
 router.post('/task', passport.authenticate('jwt', { session: false }), (req, res) => {
   
-  console.log(req.user)
+  // console.log(req.user)
+  console.log(req.body)
+
+  if(req.body.topicid){
+    console.log("update")
+  }else{
+    console.log("create")
+  }
+
+  const { errors, isValid } = validateTaskInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      // Return any errors with 400 status
+      return res.status(400).json(errors);
+    }
+
+  Topic.findOne({ _id: req.body.id })
+    .then(topic => {
+
+      const newTask = {
+        title: req.body.title
+      }
+
+      // console.log(topic)
+      // console.log(topic.tasks)
+
+      // Add to exp array
+      topic.tasks.push(newTask);
+
+      topic
+        .save()
+        .then(topic => res.json(topic))
+        .catch(error => res.send(error))
+    })
+    .catch(err => res.send(err));
+
 
 });
 
@@ -189,16 +226,60 @@ router.get('/topics', passport.authenticate('jwt', { session: false }), (req, re
 // @desc    Delete topic
 // @access  Private
 router.delete('/topic', passport.authenticate('jwt', { session: false }), (req, res) => {
-
+  console.log(req.body)
   Topic.findOneAndRemove({ _id: req.body.id })
     .then(() => {
         res.json({ success: true, id: req.body.id })
-        console.log("siker")
     })
     .catch(error => {
       res.send(error)
-      console.log("hiba")
     })
+
+});
+
+// @route   UPDATE /task
+// @desc    Update task
+// @access  Private
+// router.post('/task', passport.authenticate('jwt', { session: false }), (req, res) => {
+  
+  // Topic.findOne({ _id: req.body.topicid})
+  //   .then(topic => {
+  //     if (topic) {
+
+  //       Topic.findOneAndUpdate(
+  //         {_id: req.body.topicid},
+  //         { $pull: { tasks: { _id: req.body.taskid }}},
+  //         { new: true }
+  //       )
+  //       .then(topic => res.send(topic))
+  //       .catch(err => res.send(err))
+
+  //     }
+  //   })
+  //   .catch(err => res.send(err))
+
+// });
+
+// @route   DELETE /task
+// @desc    Delete task
+// @access  Private
+router.delete('/task', passport.authenticate('jwt', { session: false }), (req, res) => {
+  
+  Topic.findOne({ _id: req.body.topicid})
+    .then(topic => {
+      if (topic) {
+
+        Topic.findOneAndUpdate(
+          {_id: req.body.topicid},
+          { $pull: { tasks: { _id: req.body.taskid }}},
+          { new: true }
+        )
+        .then(topic => res.send(topic))
+        .catch(err => res.send(err))
+
+      }
+    })
+    .catch(err => res.send(err))
 
 });
 

@@ -1,47 +1,45 @@
-.admin-dashboard-container {
-  display: flex;
-  
-  .topics-container {
-    position: relative;
-    flex-basis: 40%;
-    display: flex;
-    justify-content: space-between;
-
-    .spinner{
-      position: absolute;
-      top: 20%;
-      left: 50%;
-      transform: translateY(-50%);
-      width: 60px;
-      height: 60px;
-    }
-
-    .topics,
-    .tasks {
-      flex-basis: 50%;
-    }
-    
-    .list-group-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: .25rem .5rem;
-      font-size: .8rem;
-
-      .first-btn {
-        margin-right: 5px;
-      }
-      .btn,
-      .btn-sm{
-        padding: .1rem .3rem;
-        font-size: .65rem;
-      }
-    }
-  }
+.topics-container {
+  width: 65%;
+  margin: auto;
+  padding-top: 1rem;
 }
 
-.task-form-container {
-  flex-basis: 60%;
+.topics-container-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 2rem;
+  background-color: #fff;
+}
+
+.topics-container-title {
+  font-size: 1.5rem;
+  font-weight: lighter;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.topic-header,
+.topic-tasks {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topic-header {
+  margin-top: 1rem;
+  padding: .5rem 2rem;
+  font-size: 1.2rem;
+  background-color:#f3f3f3;
+}
+
+.topic-tasks {
+  font-size: .9rem;
+  padding: .5rem 2rem .5rem 4rem;
+}
+
+.first-btn{
+  margin-right: 1rem;
 }
 
 .modal-header {

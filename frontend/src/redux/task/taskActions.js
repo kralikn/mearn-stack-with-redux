@@ -10,13 +10,9 @@ import {
 
   UPDATE_TOPICS,
   DELETE_ERRORS,
-  DELETE_CURRENT_TOPICS,
   EDIT_TOPICS_SUCCESS,
   EDIT_TOPIC,
-  SET_CURRENT_TOPIC,
-
-  POST_TASK
-
+  SET_CURRENT_TOPIC
 } from './topicTypes'
 
 
@@ -40,32 +36,12 @@ export const fetchTopics = () => {
 //create topic
 export const postTopic = (topic) => {
   return (dispatch) => {
-    //loading
     dispatch(fetchTopicsRequest())
     axios
       .post('/admin/topic', topic)
       .then(response => {
         const topic = response.data
         dispatch(postTopicsSuccess(topic))
-      })
-      .catch(error => {
-        dispatch(fetchTopicsFailure(error.response.data))
-      })
-  }
-}
-
-// post task
-export const postTask = (task) => {
-  return (dispatch) => {
-    //loading
-    dispatch(fetchTopicsRequest())
-    axios
-      .post('/admin/task', task)
-      .then(response => {
-        const topic = response.data
-        console.log(topic)
-        //megkeresi id alapján és kicseréli a válaszban kapott topicra (amiben már benne lesz a feladat)
-        dispatch(editTopicsSuccess(topic))
       })
       .catch(error => {
         dispatch(fetchTopicsFailure(error.response.data))
@@ -100,32 +76,10 @@ export const deleteTopic = (topic) => {
         const topic = response.data
         console.log(topic)
         dispatch(updateTopics(topic.id))
-        dispatch(deleteCurrentTopic())
-
       })
       .catch(error => {
         console.log(error)
         dispatch(fetchTopicsFailure(error.response))
-      })
-  }
-}
-
-// delete task
-export const deleteTask = (topicAndTaskId) => {
-  return (dispatch) => {
-    dispatch(fetchTopicsRequest())
-    axios
-      .delete('/admin/task', {data: topicAndTaskId} )
-      .then(response => {
-        const topic = response.data
-        console.log(response)
-        dispatch(editTopicsSuccess(topic))
-        // dispatch(deleteCurrentTopic())
-
-      })
-      .catch(error => {
-        console.log(error)
-        // dispatch(fetchTopicsFailure(error.response))
       })
   }
 }
@@ -175,13 +129,6 @@ export const updateTopics = topic => {
   return {
     type: UPDATE_TOPICS,
     payload: topic
-  }
-}
-
-// update topicArr after delete topic 
-export const deleteCurrentTopic = () => {
-  return {
-    type: DELETE_CURRENT_TOPICS
   }
 }
 

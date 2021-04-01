@@ -1,38 +1,23 @@
 import {
-
-//get all topics
   GET_TOPICS_REQUEST,
   GET_TOPICS_SUCCESS,
   GET_TOPICS_FAILURE,
-
   POST_TOPICS_SUCCESS,
-
   EDIT_TOPICS_SUCCESS,
-
   UPDATE_TOPICS,
-
   DELETE_CURRENT_TOPICS,
-
+  DELETE_CURRENT_TASK,
   DELETE_ERRORS,
-  EDIT_TOPIC,
   SET_CURRENT_TOPIC,
-  SET_CURRENT_TASK
+  SET_CURRENT_TASK,
+  UPDATE_CURRENT_TASK
 } from './topicTypes'
-
-// const initialState = {
-//   loading: false,
-//   topics: [],
-//   current: null,
-//   edit: null,
-//   error: null
-// }
 
 const initialState = {
   loading: false,
   topicsArr: [],
   currentTopic: null,
   currentTask: null,
-  // editTopic: null,
   error: null
 }
 
@@ -109,30 +94,12 @@ const reducer = (state = initialState, action) => {
         ...state,
         currentTopic: null,
       }
-    // a témakör melletti szerkesztésre kattintás
-    // case EDIT_TOPIC:
+      case DELETE_CURRENT_TASK:
 
-      // let editTop;
-      // let curr = state.currentTopic;
-      // if(!action.payload){
-      //   editTop = null
-      // }else{
-      //   let editArray = [...state.topicsArr]
-      //   editTop = editArray[editArray.findIndex((topic) => topic._id === action.payload)]
-      // }
-      // if(state.currentTopic._id === action.payload){
-      //   curr = editTop
-      //   console.log("egyenlőség")
-      // }
-
-      // let editArray = [...state.topicsArr]
-      // editTop = editArray[editArray.findIndex((topic) => topic._id === action.payload)]
-      
-      // return {
-      //   ...state,
-      //   editTopic: editTop,
-      //   // currentTopic: curr,
-      // }
+      return {
+        ...state,
+        currentTask: null,
+      }
     case DELETE_ERRORS:
       return {
         ...state,
@@ -160,6 +127,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         currentTask: newCurrentTask
       }
+      case UPDATE_CURRENT_TASK:
+        return {
+          ...state,
+          currentTask: action.payload
+        }
     default: return state
   }
 }

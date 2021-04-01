@@ -1,22 +1,18 @@
 import axios from 'axios';
 import {
-
-//get all topics
   GET_TOPICS_REQUEST,
   GET_TOPICS_SUCCESS,
   GET_TOPICS_FAILURE,
-
   POST_TOPICS_SUCCESS,
-
   UPDATE_TOPICS,
   DELETE_ERRORS,
   DELETE_CURRENT_TOPICS,
+  DELETE_CURRENT_TASK,
   EDIT_TOPICS_SUCCESS,
   EDIT_TOPIC,
   SET_CURRENT_TOPIC,
   SET_CURRENT_TASK,
-  POST_TASK
-
+  UPDATE_CURRENT_TASK
 } from './topicTypes'
 
 
@@ -41,7 +37,7 @@ export const fetchTopics = () => {
 export const postTopic = (topic) => {
   return (dispatch) => {
     //loading
-    dispatch(fetchTopicsRequest())
+    // dispatch(fetchTopicsRequest())
     axios
       .post('/admin/topic', topic)
       .then(response => {
@@ -58,7 +54,7 @@ export const postTopic = (topic) => {
 export const postTask = (task) => {
   return (dispatch) => {
     //loading
-    dispatch(fetchTopicsRequest())
+    // dispatch(fetchTopicsRequest())
     axios
       .post('/admin/task', task)
       .then(response => {
@@ -76,7 +72,8 @@ export const postTask = (task) => {
 // edit topic (editTopic)
 export const editPostTopic = (topic) => {
   return (dispatch) => {
-    dispatch(fetchTopicsRequest())
+    // loading
+    // dispatch(fetchTopicsRequest())
     axios
       .post('/admin/topic', topic)
       .then(response => {
@@ -93,7 +90,8 @@ export const editPostTopic = (topic) => {
 // delete topic
 export const deleteTopic = (topic) => {
   return (dispatch) => {
-    dispatch(fetchTopicsRequest())
+    // loading
+    // dispatch(fetchTopicsRequest())
     axios
       .delete('/admin/topic', {data: topic} )
       .then(response => {
@@ -110,21 +108,42 @@ export const deleteTopic = (topic) => {
   }
 }
 
+// edit task 
+export const editPostTask = (taskData) => {
+  return (dispatch) => {
+    // loading
+    // dispatch(fetchTopicsRequest())
+    axios
+      .post('/admin/task', taskData)
+      .then(response => {
+        const data = response.data
+        console.log(data)
+        dispatch(editTopicsSuccess(data.topic))
+        dispatch(updateCurrentTask(data.task))
+      })
+      .catch(error => {
+        console.log(error);
+        dispatch(fetchTopicsFailure(error.response))
+      })
+  }
+}
+
 // delete task
 export const deleteTask = (topicAndTaskId) => {
   return (dispatch) => {
-    dispatch(fetchTopicsRequest())
+    // loading
+    // dispatch(fetchTopicsRequest())
     axios
       .delete('/admin/task', {data: topicAndTaskId} )
       .then(response => {
         const topic = response.data
         console.log(response)
         dispatch(editTopicsSuccess(topic))
-        // dispatch(deleteCurrentTopic())
+        dispatch(deleteCurrentTopic())
 
       })
       .catch(error => {
-        console.log(error)
+        console.log(error.response)
         // dispatch(fetchTopicsFailure(error.response))
       })
   }
@@ -178,10 +197,17 @@ export const updateTopics = topic => {
   }
 }
 
-// update topicArr after delete topic 
+
 export const deleteCurrentTopic = () => {
   return {
     type: DELETE_CURRENT_TOPICS
+  }
+}
+
+// update topicArr after delete topic 
+export const deleteCurrentTask = () => {
+  return {
+    type: DELETE_CURRENT_TASK
   }
 }
 
@@ -207,6 +233,12 @@ export const setCurrentTopic = topic => {
 export const setCurrentTask = task => {
   return {
     type: SET_CURRENT_TASK,
+    payload: task
+  }
+}
+export const updateCurrentTask = task => {
+  return {
+    type: UPDATE_CURRENT_TASK,
     payload: task
   }
 }

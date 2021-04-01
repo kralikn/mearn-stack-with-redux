@@ -1,27 +1,39 @@
 import { ListGroup, ButtonGroup, Button, Modal, Form, Row, Col } from 'react-bootstrap';
-import { Link, Redirect, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { AiFillEdit, AiFillDelete, AiOutlineMore } from 'react-icons/ai';
-import { IoAdd } from 'react-icons/io5';
 import classnames from 'classnames';
 import { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteTask, setCurrentTopic, setCurrentTask } from '../../../../../redux';
+import { deleteTask, setCurrentTopic, setCurrentTask, deleteErrors, editPostTask, deleteCurrentTask, deleteCurrentTopic } from '../../../../../redux';
 
 const AdminTask = ({task}) => {
-  // const {task} = props
-  // console.log(props)
 
   const history = useHistory()
 
   const [show, setShow] = useState(false);
-  const refModalInput = useRef(null);
+  const [showTaskUpdatekModal, setShowTaskUpdatekModal] = useState(false);
 
-const dispatch = useDispatch()
+  const refModalInput = useRef(null);
+  const refTaskUpdateModalInput = useRef(null);
+
+  const dispatch = useDispatch()
   const topics = useSelector(state => state.topics)
-  const {error} = topics
+  const {error, currentTopic, currentTask} = topics
 
   const handleClose = () => setShow(false);
-  // const handleShow = () => setShow(true);
+  const handleShowTaskUpdate = (e) => {
+    setShowTaskUpdatekModal(true);
+
+    let topicAndTaskId = {
+      taskid: e.target.parentElement.parentElement.parentElement.getAttribute("data-task"),
+      topicid: e.target.parentElement.parentElement.parentElement.parentElement.getAttribute("data-topic")
+    }
+
+    dispatch(setCurrentTopic({id: e.target.parentElement.parentElement.parentElement.parentElement.getAttribute("data-topic")}))
+    dispatch(setCurrentTask(topicAndTaskId))
+
+  }
+  const handleCloseTaskUpdate = () => setShowTaskUpdatekModal(false);
 
   const handleDeleteTask = (e) => {
 
@@ -48,6 +60,20 @@ const dispatch = useDispatch()
 
   }
 
+  const handleUpdateTask = (e) => {
+
+    let taskData = {
+      topicid: currentTopic._id,
+      taskid: currentTask._id,
+      [refTaskUpdateModalInput.current.name]: refTaskUpdateModalInput.current.value
+    }
+
+    dispatch(editPostTask(taskData))
+
+    refTaskUpdateModalInput.current.value = null
+
+  }
+
   return (
     <>
       <ListGroup.Item data-task={task._id} className="topic-tasks">
@@ -61,6 +87,7 @@ const dispatch = useDispatch()
               variant="info"
               size="sm"
               className="first-btn"
+              onClick={handleEditTask}
             >
               <AiOutlineMore />
             </Button>
@@ -69,7 +96,7 @@ const dispatch = useDispatch()
           {/* itt szerkeszteni tudjuk  ---- link */}
             <Button
               variant="success"
-              onClick={handleEditTask}
+              onClick={handleShowTaskUpdate}
             >
                 <AiFillEdit />
             </Button>
@@ -111,6 +138,45 @@ const dispatch = useDispatch()
             variant="success"
           >
             Küldés
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* feladat átnevezése */}
+      <Modal
+        show={showTaskUpdatekModal}
+        onHide={() => {
+          dispatch(deleteCurrentTopic())
+          dispatch(deleteCurrentTask())
+          handleCloseTaskUpdate()
+          dispatch(deleteErrors())
+        }}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Feladat átnevezése</Modal.Title>
+        </Modal.Header>
+        <Row className="justify-content-center">
+          <Col className="col-10">
+            <Form.Control
+              name="title"
+              type="text"
+              ref={refTaskUpdateModalInput}
+              placeholder={error ? error.placeholder : null}
+              className={classnames(" form-control", {
+                "is-invalid": error
+              })}
+            />
+            {error && (<Form.Control.Feedback type="invalid">{error.msg}</Form.Control.Feedback>)}
+          </Col>
+        </Row>
+        <Modal.Footer>
+          <Button
+            variant="success" 
+            onClick={handleUpdateTask}           
+          >
+            Frissítés
           </Button>
         </Modal.Footer>
       </Modal>

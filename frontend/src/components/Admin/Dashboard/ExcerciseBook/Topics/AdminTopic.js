@@ -2,10 +2,8 @@ import './AdminTopics.scss';
 import { ListGroup, ButtonGroup, Button } from 'react-bootstrap';
 import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
 import AdminTask from '../Tasks/AdminTask';
-import { useRef, useState } from 'react';
-// import classnames from 'classnames';
 import { useDispatch } from 'react-redux';
-import { deleteTopic, setCurrentTopic } from '../../../../../redux';
+import { deleteTopic, setCurrentTopic, deleteCurrentTask } from '../../../../../redux';
 
 
 const AdminTopic = ({topic, handleShowNewTaskModal, handleShowTopicUpdate, handleShowTaskUpdate}) => {
@@ -17,6 +15,7 @@ const AdminTopic = ({topic, handleShowNewTaskModal, handleShowTopicUpdate, handl
 
     let topicId = { id: e.target.parentElement.parentElement.parentElement.parentElement.getAttribute("data-topic")}
     dispatch(deleteTopic(topicId))
+    dispatch(deleteCurrentTask())
 
   }
       
@@ -63,7 +62,6 @@ const AdminTopic = ({topic, handleShowNewTaskModal, handleShowTopicUpdate, handl
           return <AdminTask 
                     key={task._id}
                     task={task}
-                    handleShowTaskUpdate={handleShowTaskUpdate}
                   />
         })}
       </ListGroup>

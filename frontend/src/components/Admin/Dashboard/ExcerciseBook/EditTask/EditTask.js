@@ -1,11 +1,10 @@
 import './EditTask.scss';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 
 const EditTask = () => {
 
-  const dispatch = useDispatch()
   const currentTopic = useSelector(state => state.topics.currentTopic)
   const currentTask = useSelector(state => state.topics.currentTask)
   console.log(currentTopic)

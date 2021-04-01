@@ -24,6 +24,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import PrivateRouteUser from './components/Common/PrivateRouteUser';
 import PrivateRouteAdmin from './components/Common/PrivateRouteAdmin';
 import ExcerciseBook from './components/Admin/Dashboard/ExcerciseBook/ExcerciseBook';
+import EditTask from './components/Admin/Dashboard/ExcerciseBook/EditTask/EditTask';
 
 // Check for token
 if (localStorage.jwtToken) {
@@ -43,7 +44,7 @@ if (localStorage.jwtToken) {
   // if (decoded.exp < currentTime) {
     
   //   // Logout user
-  //   store.dispatch(logoutUser({}));
+    // store.dispatch(logoutUser({}));
   //   // TODO: Clear current Profile
 
   //   // Redirect to login
@@ -67,7 +68,7 @@ function App() {
             <Route path='/admin/register' component={AdminRegister} />
             <PrivateRouteAdmin exact path='/dashboard/admin' component={AdminDashboard} />
             <PrivateRouteAdmin exact path='/dashboard/admin/excercises' component={ExcerciseBook} />
-            {/* <PrivateRouteAdmin exact path='/dashboard/admin/topics' component={AdminTopics} /> */}
+            <PrivateRouteAdmin exact path='/dashboard/admin/task/:id' component={EditTask} />
             <PrivateRouteAdmin exact path='/dashboard/admin/users' component={AdminUsers} />
           </Switch>
         </Router>

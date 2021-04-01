@@ -14,7 +14,7 @@ import {
   EDIT_TOPICS_SUCCESS,
   EDIT_TOPIC,
   SET_CURRENT_TOPIC,
-
+  SET_CURRENT_TASK,
   POST_TASK
 
 } from './topicTypes'
@@ -200,6 +200,14 @@ export const setCurrentTopic = topic => {
   return {
     type: SET_CURRENT_TOPIC,
     payload: topic
+  }
+}
+
+// set current task
+export const setCurrentTask = task => {
+  return {
+    type: SET_CURRENT_TASK,
+    payload: task
   }
 }
 

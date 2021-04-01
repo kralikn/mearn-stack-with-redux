@@ -1,13 +1,17 @@
 import { ListGroup, ButtonGroup, Button, Modal, Form, Row, Col } from 'react-bootstrap';
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import { AiFillEdit, AiFillDelete, AiOutlineMore } from 'react-icons/ai';
 import { IoAdd } from 'react-icons/io5';
 import classnames from 'classnames';
 import { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteTask, postTask } from '../../../../../redux';
-
+import { deleteTask, setCurrentTopic, setCurrentTask } from '../../../../../redux';
 
 const AdminTask = ({task}) => {
+  // const {task} = props
+  // console.log(props)
+
+  const history = useHistory()
 
   const [show, setShow] = useState(false);
   const refModalInput = useRef(null);
@@ -17,7 +21,7 @@ const dispatch = useDispatch()
   const {error} = topics
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  // const handleShow = () => setShow(true);
 
   const handleDeleteTask = (e) => {
 
@@ -30,16 +34,17 @@ const dispatch = useDispatch()
 
   }
 
-  const handleUpdateTask = (e) => {
+  const handleEditTask = (e) => {
 
     let topicAndTaskId = {
       taskid: e.target.parentElement.parentElement.parentElement.getAttribute("data-task"),
       topicid: e.target.parentElement.parentElement.parentElement.parentElement.getAttribute("data-topic")
     }
 
-    console.log(topicAndTaskId)
+    dispatch(setCurrentTopic({id: e.target.parentElement.parentElement.parentElement.parentElement.getAttribute("data-topic")}))
+    dispatch(setCurrentTask(topicAndTaskId))
 
-    dispatch(postTask(topicAndTaskId))
+    history.push(`/dashboard/admin/task/${task._id}`)
 
   }
 
@@ -61,11 +66,12 @@ const dispatch = useDispatch()
             </Button>
           </ButtonGroup>
           <ButtonGroup size="sm"> 
-          {/* itt szerkeszteni tudjuk  ---- link */}           
+          {/* itt szerkeszteni tudjuk  ---- link */}
             <Button
               variant="success"
+              onClick={handleEditTask}
             >
-              <AiFillEdit />
+                <AiFillEdit />
             </Button>
             <Button
               variant="danger"

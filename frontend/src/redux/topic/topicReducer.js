@@ -15,7 +15,8 @@ import {
 
   DELETE_ERRORS,
   EDIT_TOPIC,
-  SET_CURRENT_TOPIC
+  SET_CURRENT_TOPIC,
+  SET_CURRENT_TASK
 } from './topicTypes'
 
 // const initialState = {
@@ -30,12 +31,20 @@ const initialState = {
   loading: false,
   topicsArr: [],
   currentTopic: null,
-  editTopic: null,
+  currentTask: null,
+  // editTopic: null,
   error: null
 }
 
 const reducer = (state = initialState, action) => {
+
+  let newArray;
+  let newCurrentTopic;
+  let newCurrentTask;
+
   switch (action.type) {
+
+
     //get all topics
     case GET_TOPICS_REQUEST:
       return {
@@ -67,9 +76,7 @@ const reducer = (state = initialState, action) => {
 
     // edit topic
     case EDIT_TOPICS_SUCCESS:
-
-      let newArray = [...state.topicsArr]
-      // let current = state.currentTopic;
+      newArray = [...state.topicsArr]
       newArray[newArray.findIndex((topic) => topic._id === action.payload._id)] = action.payload
 
       // if(state.currentTopic && state.currentTopic._id === action.payload._id){
@@ -80,16 +87,12 @@ const reducer = (state = initialState, action) => {
         ...state,
         loading: false,
         topicsArr: newArray,
-        // currentTopic: current,
-        // editTopic: null,
         error: null
       }
 
       // update topicArr after delete topic (ellenőrizve / kell e később a currentTopic?)
       case UPDATE_TOPICS:
         
-      // let currentTop = state.currentTopic
-
       // if(currentTop && currentTop._id === action.payload){
       //   currentTop = null
       // }
@@ -98,7 +101,6 @@ const reducer = (state = initialState, action) => {
         ...state,
         loading: false,
         topicsArr: state.topicsArr.filter(topic => topic._id !== action.payload),
-        // currentTopic: currentTop,
         error: null
       }
       case DELETE_CURRENT_TOPICS:
@@ -108,16 +110,16 @@ const reducer = (state = initialState, action) => {
         currentTopic: null,
       }
     // a témakör melletti szerkesztésre kattintás
-    case EDIT_TOPIC:
+    // case EDIT_TOPIC:
 
-      let editTop;
+      // let editTop;
       // let curr = state.currentTopic;
-      if(!action.payload){
-        editTop = null
-      }else{
-        let editArray = [...state.topicsArr]
-        editTop = editArray[editArray.findIndex((topic) => topic._id === action.payload)]
-      }
+      // if(!action.payload){
+      //   editTop = null
+      // }else{
+      //   let editArray = [...state.topicsArr]
+      //   editTop = editArray[editArray.findIndex((topic) => topic._id === action.payload)]
+      // }
       // if(state.currentTopic._id === action.payload){
       //   curr = editTop
       //   console.log("egyenlőség")
@@ -126,11 +128,11 @@ const reducer = (state = initialState, action) => {
       // let editArray = [...state.topicsArr]
       // editTop = editArray[editArray.findIndex((topic) => topic._id === action.payload)]
       
-      return {
-        ...state,
-        editTopic: editTop,
-        // currentTopic: curr,
-      }
+      // return {
+      //   ...state,
+      //   editTopic: editTop,
+      //   // currentTopic: curr,
+      // }
     case DELETE_ERRORS:
       return {
         ...state,
@@ -139,17 +141,24 @@ const reducer = (state = initialState, action) => {
 
     // a témakör mellett 3 pontra kattintás
     case SET_CURRENT_TOPIC:
-      
-      // let currentTopic = [...state.topicsArr].filter(topic => topic._id === action.payload)
-      // console.log(action.payload)
-      let topArray = [...state.topicsArr]
-     
-      let currTop = topArray[topArray.findIndex((topic) => topic._id === action.payload.id)]
-      // currentTopic.filter(topic => topic._id === action.payload)
+
+      newArray = [...state.topicsArr]
+      newCurrentTopic = newArray[newArray.findIndex((topic) => topic._id === action.payload.id)]
+      console.log(newCurrentTopic)
+      return {
+        ...state,
+        currentTopic: newCurrentTopic
+      }
+      // a témakör mellett 3 pontra kattintás
+      case SET_CURRENT_TASK:
+        
+        newArray = [...state.topicsArr]
+        newCurrentTopic = newArray[newArray.findIndex((topic) => topic._id === action.payload.topicid)]
+        newCurrentTask = newCurrentTopic.tasks[newCurrentTopic.tasks.findIndex((task) => task._id === action.payload.taskid)]
 
       return {
         ...state,
-        currentTopic: currTop
+        currentTask: newCurrentTask
       }
     default: return state
   }

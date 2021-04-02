@@ -56,7 +56,7 @@ const AdminTask = ({task}) => {
     dispatch(setCurrentTopic({id: e.target.parentElement.parentElement.parentElement.parentElement.getAttribute("data-topic")}))
     dispatch(setCurrentTask(topicAndTaskId))
 
-    history.push(`/dashboard/admin/task/${task._id}`)
+    history.push(`/dashboard/admin/task`)
 
   }
 

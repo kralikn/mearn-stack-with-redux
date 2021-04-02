@@ -24,7 +24,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import PrivateRouteUser from './components/Common/PrivateRouteUser';
 import PrivateRouteAdmin from './components/Common/PrivateRouteAdmin';
 import ExcerciseBook from './components/Admin/Dashboard/ExcerciseBook/ExcerciseBook';
-import EditTask from './components/Admin/Dashboard/ExcerciseBook/EditTask/EditTask';
+import CreateTask from './components/Admin/Dashboard/ExcerciseBook/CreateTask/CreateTask';
 
 // Check for token
 if (localStorage.jwtToken) {
@@ -68,7 +68,7 @@ function App() {
             <Route path='/admin/register' component={AdminRegister} />
             <PrivateRouteAdmin exact path='/dashboard/admin' component={AdminDashboard} />
             <PrivateRouteAdmin exact path='/dashboard/admin/excercises' component={ExcerciseBook} />
-            <PrivateRouteAdmin exact path='/dashboard/admin/task/:id' component={EditTask} />
+            <PrivateRouteAdmin exact path='/dashboard/admin/task' component={CreateTask} />
             <PrivateRouteAdmin exact path='/dashboard/admin/users' component={AdminUsers} />
           </Switch>
         </Router>

@@ -111,7 +111,7 @@ const reducer = (state = initialState, action) => {
 
       newArray = [...state.topicsArr]
       newCurrentTopic = newArray[newArray.findIndex((topic) => topic._id === action.payload.id)]
-      console.log(newCurrentTopic)
+      // console.log(newCurrentTopic)
       return {
         ...state,
         currentTopic: newCurrentTopic

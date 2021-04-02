@@ -1,0 +1,7 @@
+1. feladat
+
+Az "Egyébberendezéseket-VÁSÁRLÓ" Kft. tárgyieszköz-beszerzésével kapcsolatosan a következő információkat ismerjük:
+1. A vállalkozás irodabútorokat vásárolt. A számla szerinti vételás az átutalásos számla alapján 1920 E Ft + 48 E Ft.
+2. Az irodabútorok szállításának díja a fuvarozó cég készpénzfizetési számlája szerint 80 E Ft + 20 E Ft áfa.
+3. A vállalkozás az irodabútorokat október 1-jén használatba vette. A berendezések tervezett hasznos élettartama 5 év, a leírás lineáris, a maradványérték 0 Ft.
+4. December 31-ére vonatkozóan elszámolásra került a tárgyévi időarányos értékcsökkenés.

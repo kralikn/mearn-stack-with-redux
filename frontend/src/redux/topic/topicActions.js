@@ -32,7 +32,6 @@ export const fetchTopics = () => {
   }
 }
 
-
 //create topic
 export const postTopic = (topic) => {
   return (dispatch) => {
@@ -53,17 +52,18 @@ export const postTopic = (topic) => {
 // post task
 export const postTask = (task) => {
   return (dispatch) => {
-    //loading
+    // loading
     // dispatch(fetchTopicsRequest())
     axios
       .post('/admin/task', task)
       .then(response => {
         const topic = response.data
-        console.log(topic)
+        // console.log(topic.topic.tasks)
         //megkeresi id alapján és kicseréli a válaszban kapott topicra (amiben már benne lesz a feladat)
         dispatch(editTopicsSuccess(topic))
       })
       .catch(error => {
+        console.log(error)
         dispatch(fetchTopicsFailure(error.response.data))
       })
   }
@@ -78,6 +78,7 @@ export const editPostTopic = (topic) => {
       .post('/admin/topic', topic)
       .then(response => {
         const topic = response.data
+        console.log(response)
         dispatch(editTopicsSuccess(topic))
       })
       .catch(error => {
@@ -118,8 +119,8 @@ export const editPostTask = (taskData) => {
       .then(response => {
         const data = response.data
         console.log(data)
-        dispatch(editTopicsSuccess(data.topic))
-        dispatch(updateCurrentTask(data.task))
+        dispatch(editTopicsSuccess(data))
+        // dispatch(updateCurrentTask(data.task))
       })
       .catch(error => {
         console.log(error);

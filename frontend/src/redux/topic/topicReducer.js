@@ -29,7 +29,6 @@ const reducer = (state = initialState, action) => {
 
   switch (action.type) {
 
-
     //get all topics
     case GET_TOPICS_REQUEST:
       return {
@@ -61,12 +60,13 @@ const reducer = (state = initialState, action) => {
 
     // edit topic
     case EDIT_TOPICS_SUCCESS:
+      console.log(action.payload)
       newArray = [...state.topicsArr]
-      newArray[newArray.findIndex((topic) => topic._id === action.payload._id)] = action.payload
+      console.log(newArray)
 
-      // if(state.currentTopic && state.currentTopic._id === action.payload._id){
-      //   current = action.payload
-      // }
+      //témakör átnevezése (ok)
+      newArray[newArray.findIndex((topic) => topic._id === action.payload._id)] = action.payload
+      
 
       return {
         ...state,
@@ -111,7 +111,7 @@ const reducer = (state = initialState, action) => {
 
       newArray = [...state.topicsArr]
       newCurrentTopic = newArray[newArray.findIndex((topic) => topic._id === action.payload.id)]
-      // console.log(newCurrentTopic)
+      console.log(newCurrentTopic)
       return {
         ...state,
         currentTopic: newCurrentTopic

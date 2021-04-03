@@ -108,6 +108,21 @@ router.post('/register', (req, res) => {
   });
 });
 
+// @route   GET /all topic
+// @desc    get all topic
+// @access  Private
+router.get('/topics', passport.authenticate('jwt', { session: false }), (req, res) => {
+
+  Topic.find({})
+    .then(topics => {
+      res.send(topics)
+    })
+    .catch(error => {
+      res.send(error)
+    })
+});
+
+
 // @route   POST /topic
 // @desc    Create new topic
 // @access  Private
@@ -129,12 +144,18 @@ router.post('/topic', passport.authenticate('jwt', { session: false }), (req, re
 
         Topic.findOneAndUpdate(
           {_id: req.body.id },
-          {title: req.body.title },
+          // {title: req.body.title },
+          {$set: { "title": req.body.title } },
           { new: true }
+
+          // { _id: req.body.topicid, "tasks._id": req.body.taskid},
+          // { $set: { "tasks.$.title": req.body.title }},
+          // { new: true }
+
         )
         .then(topic => {
           console.log(topic)
-          res.json(topic)
+          res.send(topic)
         })
         .catch(err => res.json(err))
       }
@@ -142,14 +163,17 @@ router.post('/topic', passport.authenticate('jwt', { session: false }), (req, re
   }else {
     Topic.findOne({ title: req.body.title }).then(topic => {
       if (topic) {
+
         errors.msg = 'Ez már egy létező témakör';
         errors.placeholder = req.body.title;
         console.log(errors)
         return res.status(400).json(errors);
+
       } else {
-  
+
         const newTopic = new Topic({
           title: req.body.title,
+
         });
   
         newTopic
@@ -168,36 +192,66 @@ router.post('/topic', passport.authenticate('jwt', { session: false }), (req, re
 router.post('/task', passport.authenticate('jwt', { session: false }), (req, res) => {
   
   // console.log(req.user)
+  console.log(Object.keys(req.body))
   console.log(req.body)
 
   if(req.body.taskid){
-    console.log("update")
     //update
     Topic.findOne({ _id: req.body.topicid })
     .then(topic => {
       // console.log(topic)
       if(topic){
 
-        Topic.findOneAndUpdate(
+        if(Object.keys(req.body).length === 3){
+          Topic.findOneAndUpdate(
 
-          { _id: req.body.topicid, "tasks._id": req.body.taskid },
-          { $set: { "tasks.$.title": req.body.title } },
+            { _id: req.body.topicid, "tasks._id": req.body.taskid},
+            { $set: { "tasks.$.title": req.body.title }},
+            { new: true }
+          )
+          .then(topic => {
+            console.log(topic)
+            res.send(topic)
+          })
+          .catch(error => {
+            console.log(error)
+            res.send(error)
+          })
+        }else {
+          Topic.findOneAndUpdate(
+
+          { _id: req.body.topicid, "tasks._id": req.body.taskid},
+          // { $set: updatedTaskData },
+          { $set: { 
+                    "tasks.$.title": req.body.title,
+                    "tasks.$.text": req.body.text,
+                    "tasks.$.events": req.body.events,
+                    "tasks.$.tasks": req.body.tasks
+                  }
+          },
           { new: true }
         )
         .then(topic => {
           console.log(topic)
-          let newTask;
-          topic.tasks.map(task => {
-            if(String(task._id) === req.body.taskid){
-              newTask = task
-            }
-          })
+          res.send(topic)
+          // let newTask;
+          // topic.tasks.map(task => {
+          //   if(String(task._id) === req.body.taskid){
+          //     newTask = task
+          //   }
+          // })
           // let newTask = topic.tasks.find(task => String(task._id === req.body.taskid))
-          res.send({
-            task: newTask,
-            topic: topic})
+          // res.send({
+          //   task: newTask,
+          //   topic: topic})
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+          console.log(error)
+          res.send(error)
+        })
+        }
+
+        
       }
     })
       .catch(error => console.log(error))
@@ -210,7 +264,28 @@ router.post('/task', passport.authenticate('jwt', { session: false }), (req, res
     .then(topic => {
 
       const newTask = {
-        title: req.body.title
+        title: req.body.title,
+        text: '',
+        events: [
+          {
+            text: ''
+          }
+        ],
+        tasks: [
+          {
+            type: '',
+            text: '',
+            rows: [
+              {
+                ssz: '',
+                megnevezes: '',
+                tartozik: '',
+                kovetel: '',
+                amount: '',
+              }
+            ]
+          }
+        ]
       }
 
       // Add to exp array
@@ -218,7 +293,10 @@ router.post('/task', passport.authenticate('jwt', { session: false }), (req, res
 
       topic
         .save()
-        .then(topic => res.json(topic))
+        .then(topic => {
+          console.log(topic)
+          res.json(topic)
+        })
         .catch(error => res.send(error))
     })
     .catch(err => res.send(err));
@@ -226,46 +304,30 @@ router.post('/task', passport.authenticate('jwt', { session: false }), (req, res
 
   // const { errors, isValid } = validateTaskInput(req.body);
 
-  // // Check Validation
-  // if (!isValid) {
-  //   // Return any errors with 400 status
-  //   return res.status(400).json(errors);
-  // }
+          // // Check Validation
+          // if (!isValid) {
+          //   // Return any errors with 400 status
+          //   return res.status(400).json(errors);
+          // }
 
-  // Topic.findOne({ _id: req.body.id })
-  //   .then(topic => {
+          // Topic.findOne({ _id: req.body.id })
+          //   .then(topic => {
 
-  //     const newTask = {
-  //       title: req.body.title
-  //     }
+          //     const newTask = {
+          //       title: req.body.title
+          //     }
 
-  //     // Add to exp array
-  //     topic.tasks.push(newTask);
+          //     // Add to exp array
+          //     topic.tasks.push(newTask);
 
-  //     topic
-  //       .save()
-  //       .then(topic => res.json(topic))
-  //       .catch(error => res.send(error))
-  //   })
-  //   .catch(err => res.send(err));
-
-
+          //     topic
+          //       .save()
+          //       .then(topic => res.json(topic))
+          //       .catch(error => res.send(error))
+          //   })
+          //   .catch(err => res.send(err));
 });
 
-
-// @route   GET /all topic
-// @desc    get all topic
-// @access  Private
-router.get('/topics', passport.authenticate('jwt', { session: false }), (req, res) => {
-
-  Topic.find({})
-    .then(topics => {
-      res.send(topics)
-    })
-    .catch(error => {
-      res.send(error)
-    })
-});
 
 // @route   DELETE /topic
 // @desc    Delete topic

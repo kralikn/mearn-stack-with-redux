@@ -1,35 +1,52 @@
 import './CreateTask.scss';
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 // import TextAreaFieldGroup from './Elements/TextAreaFieldGroup';
 // import { addEvent } from '../../../../../redux'
 import { IoAddOutline } from "react-icons/io5";
 import { AiFillDelete } from 'react-icons/ai';
 // import { v4 as uuidv4 } from 'uuid';
 // import { nanoid } from 'nanoid'
+import { postTask } from '../../../../../redux';
 
 
 const CreateTask = () => {
 
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
-  // const currentTopic = useSelector(state => state.topics.currentTopic)
+  const currentTopic = useSelector(state => state.topics.currentTopic)
   const currentTask = useSelector(state => state.topics.currentTask)
-
+  // console.log(currentTask._id)
   const [formData, setFormData] = useState({
+    topicid: currentTopic._id,
+    taskid: currentTask._id,
     title: currentTask.title,
     text: '',
     events: [
-      {value: ''}
+      {text: ''}
     ],
     tasks: []
   })
+  // console.log(formData)
+
+  useEffect(() => {
+    if(localStorage.currentTaskFormData){
+      setFormData(JSON.parse(localStorage.currentTaskFormData))
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('currentTaskFormData', JSON.stringify(formData));
+  }, [formData])
+
+  // console.log(formData)
+  // console.log(localStorage.currentTaskFormData)
 
   const handleChangeEvents = (e, index) => {
     const eventList = [...formData.events]
-    eventList[index].value = e.target.value
+    eventList[index].text = e.target.value
     setFormData({...formData})
   }
 
@@ -41,19 +58,20 @@ const CreateTask = () => {
 
   const handleChangeIdosorosText = (e, index) => {
     const taskList = [...formData.tasks]
-    taskList[index].value = e.target.value
+    taskList[index].text = e.target.value
     setFormData({...formData})
   }
 
   const handleAddEvent = () => {
     const newFormData = {...formData}
-    formData.events.push({value: ''})
+    // formData.events.push({value: ''})
+    formData.events.push({text: ''})
     setFormData(newFormData)
   }
 
   const handleAddTaskIdosoros = () => {
     const newFormData = {...formData}
-    newFormData.tasks.push({type: 'idosoros', value: '', rows: [
+    newFormData.tasks.push({type: 'idosoros', text: '', rows: [
       {ssz:'', megnevezes: '', tartozik: '', kovetel: '', amount: ''}
     ]})
     setFormData(newFormData)
@@ -86,6 +104,15 @@ const CreateTask = () => {
     setFormData(newFormData)
   }
 
+  const handleLocalStorage = () => {
+    localStorage.removeItem('currentTaskFormData');
+  }
+
+  const handleSubmitTask = () => {
+    // console.log(formData)
+    dispatch(postTask(formData))
+  }
+
   // if(!currentTopic){
   //   return <h1>Loading...</h1>
   // }
@@ -93,6 +120,7 @@ const CreateTask = () => {
   return (
     <div className="task-editor-container">
       <Link 
+        onClick={handleLocalStorage}
         to='/dashboard/admin/excercises'
         variant="info"
         className="custom-link"
@@ -138,7 +166,7 @@ const CreateTask = () => {
                       className="custom-input"
                       type="text"
                       rows={3}
-                      value={event.value}
+                      value={event.text}
                       name="event"
                       onChange={(e) => {
                         handleChangeEvents(e, index)
@@ -176,7 +204,7 @@ const CreateTask = () => {
                     // as="textarea"
                     rows={3}
                     name="task"
-                    value={task.value}
+                    value={task.text}
                     type="text"
                     onChange={(e) => {
                       handleChangeIdosorosText(e, index)
@@ -295,10 +323,16 @@ const CreateTask = () => {
               
             {/* </Form> */}
           </div>
+          <Button
+            variant="danger"
+            onClick={handleSubmitTask}
+          >
+            Küldés
+          </Button>
           </div>
         </div>
-        {/* <div className="showcase editor-dashboard"> */}
-          {/* <div className="showcase-header">
+        <div className="showcase editor-dashboard">
+          <div className="showcase-header">
             <h4 className="showcase-header-title">{currentTask.title}</h4>
           </div>
           <div className="showcase-content">
@@ -308,24 +342,63 @@ const CreateTask = () => {
             <div className="showcase-content-events">
               <ol>
                 {formData.events.map(event => {
-                  return <li>{event.value}</li>
+                  return <li>{event.text}</li>
                 })}
               </ol>
             </div>
+            {formData.tasks.length > 0 && <p>Feladatok:</p>}
             <div className="showcase-content-tasks">
-              <ol className="task-list">
-                {tasks.map(task => {
-                  return <li>{task.value}</li>
+              <ol className="showcase-task-list">
+                {formData.tasks.map(task => {
+                  return (
+                    <li>
+                      <p>{task.value}</p>
+                      {task.type === 'idosoros' && task.value !== '' &&
+                        <div className="showcase-idosoros-table">
+                          <div className="custom-table-header">
+                            <div>Ssz.</div>
+                            <div>Gazdasági esemény megnevezése</div>
+                            <div>Tartozik</div>
+                            <div>Követel</div>
+                            <div>Összeg</div>
+                          </div>
+                          {task.rows.map(row => {
+                            return (
+                              <div className="custom-table-row">
+                                <div>
+                                  {row.ssz}
+                                </div>
+                                <div>
+                                  {row.megnevezes}
+                                </div>
+                                <div>
+                                  {row.tartozik}
+                                </div>
+                                <div>
+                                  {row.kovetel}
+                                </div>
+                                <div>
+                                  {row.amount}
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      }
+                    </li>
+                  )
                 })}
               </ol>
-            </div> */}
-        {/* </div> */}
+            </div>
+        </div>
       
-        <pre>
+        {/* <pre>
             {JSON.stringify(formData, null, 2)}
-        </pre>
+        </pre> */}
+
+
       </div>
-    // </div>
+    </div>
   )
 }
 

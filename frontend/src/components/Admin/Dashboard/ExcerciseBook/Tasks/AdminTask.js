@@ -53,6 +53,8 @@ const AdminTask = ({task}) => {
       topicid: e.target.parentElement.parentElement.parentElement.parentElement.getAttribute("data-topic")
     }
 
+    // console.log(topicAndTaskId)
+
     dispatch(setCurrentTopic({id: e.target.parentElement.parentElement.parentElement.parentElement.getAttribute("data-topic")}))
     dispatch(setCurrentTask(topicAndTaskId))
 

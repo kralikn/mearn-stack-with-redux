@@ -30,6 +30,7 @@ const ExcerciseBook = () => {
   const handleCreateTopic = () => {
    
     dispatch(postTopic({
+      // {title: ...}
       [refModalInput.current.name]: refModalInput.current.value
     }))
     refModalInput.current.value = null

@@ -1,8 +1,14 @@
-import './AdminDashboard.scss'
+import './AdminDashboard.scss';
+import jwt_decode from 'jwt-decode';
 
 const AdminDashboard = (props) => {
 
-  // console.log(props);
+  if (localStorage.jwtToken) {
+    const decoded = jwt_decode(localStorage.jwtToken);
+    if(!decoded.isAdmin) {
+       props.history.push('/dashboard/user');
+    }
+  }
 
   return (
     <div className="admin-dashboard-container">

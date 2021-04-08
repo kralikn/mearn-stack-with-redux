@@ -1,6 +1,7 @@
 import { ListGroup, ButtonGroup, Button, Modal, Form, Row, Col } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import { AiFillEdit, AiFillDelete, AiOutlineMore } from 'react-icons/ai';
+import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
+import { FiRefreshCw } from "react-icons/fi";
 import classnames from 'classnames';
 import { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,6 +22,7 @@ const AdminTask = ({task}) => {
   const {error, currentTopic, currentTask} = topics
 
   const handleClose = () => setShow(false);
+
   const handleShowTaskUpdate = (e) => {
     setShowTaskUpdatekModal(true);
 
@@ -53,8 +55,6 @@ const AdminTask = ({task}) => {
       topicid: e.target.parentElement.parentElement.parentElement.parentElement.getAttribute("data-topic")
     }
 
-    // console.log(topicAndTaskId)
-
     dispatch(setCurrentTopic({id: e.target.parentElement.parentElement.parentElement.parentElement.getAttribute("data-topic")}))
     dispatch(setCurrentTask(topicAndTaskId))
 
@@ -84,23 +84,22 @@ const AdminTask = ({task}) => {
         </div>
         <div className="task-button-group">
           <ButtonGroup size="sm">
-            {/* itt link lesz, ahol meg tudjuk nézni, mint felhasználó ---- link */}
             <Button
               variant="info"
               size="sm"
               className="first-btn"
               onClick={handleEditTask}
             >
-              <AiOutlineMore />
+              <AiFillEdit />
             </Button>
           </ButtonGroup>
           <ButtonGroup size="sm"> 
-          {/* itt szerkeszteni tudjuk  ---- link */}
             <Button
               variant="success"
+              className="refresh-btn"
               onClick={handleShowTaskUpdate}
             >
-                <AiFillEdit />
+              <FiRefreshCw />
             </Button>
             <Button
               variant="danger"

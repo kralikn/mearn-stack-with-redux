@@ -1,6 +1,7 @@
 import './AdminTopics.scss';
 import { ListGroup, ButtonGroup, Button } from 'react-bootstrap';
-import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
+import { AiFillDelete } from 'react-icons/ai';
+import { FiRefreshCw } from "react-icons/fi";
 import AdminTask from '../Tasks/AdminTask';
 import { useDispatch } from 'react-redux';
 import { deleteTopic, setCurrentTopic, deleteCurrentTask } from '../../../../../redux';
@@ -47,7 +48,7 @@ const AdminTopic = ({topic, handleShowNewTaskModal, handleShowTopicUpdate, handl
                   dispatch(setCurrentTopic({id: e.target.parentElement.parentElement.parentElement.parentElement.getAttribute("data-topic")}))
                 }}
               >
-                <AiFillEdit />
+                <FiRefreshCw />
               </Button>
               <Button
                 variant="danger"

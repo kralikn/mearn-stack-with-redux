@@ -5,7 +5,8 @@ import setAuthToken from '../../utils/setAuthToken'
 import {
   FETCH_USERLOGIN_REQUEST,
   FETCH_USERLOGIN_SUCCESS,
-  FETCH_USERLOGIN_FAILURE
+  FETCH_USERLOGIN_FAILURE,
+  SET_LOGOUT_USER
 } from './userLoginTypes'
 
 
@@ -53,7 +54,7 @@ export const setCurrentAdmin = (userData, history) => {
         dispatch(fetchUserLoginSuccess(decoded))
 
         history.push('/dashboard/admin')
-
+      
       })
       .catch(error => {
         dispatch(fetchUserLoginFailure(error.response.data))
@@ -61,12 +62,34 @@ export const setCurrentAdmin = (userData, history) => {
   }
 }
 
+// Log user out
+export const logoutUser = () => {
+
+  return(dispatch) => {
+    // Remove token from localStorage
+    localStorage.removeItem('jwtToken');
+    // Remove auth header for future requests
+    setAuthToken(false);
+    // Set current user to {} which will set isAuthenticated to false
+    dispatch(setCurrentUser({}));
+  }
+};
+
+// Set logged in user
+export const setLogoutUser = () => {
+  return {
+    type: SET_LOGOUT_USER
+    // payload: decoded
+  };
+};
+
 export const fetchUserLoginSuccess = (decoded) => {
   return {
     type: FETCH_USERLOGIN_SUCCESS,
     payload: decoded
   }
 }
+
 
 export const fetchUserRequest = () => {
   return {

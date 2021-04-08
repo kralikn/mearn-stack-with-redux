@@ -16,7 +16,7 @@ import AdminUsers from './components/Admin/Dashboard/Users/AdminUsers';
 
 import setAuthToken from './utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
-import { fetchUserLoginSuccess } from './redux';
+import { fetchUserLoginSuccess, logoutUser } from './redux';
 
 import { Provider } from 'react-redux';
 import {store, persistor } from './redux/store';
@@ -39,21 +39,22 @@ if (localStorage.jwtToken) {
   store.dispatch(fetchUserLoginSuccess(decoded));
 
   // Check for expired token
-  // const currentTime = Date.now() / 1000;
+  const currentTime = Date.now() / 1000;
 
-  // if (decoded.exp < currentTime) {
+  if (decoded.exp < currentTime) {
     
-  //   // Logout user
-    // store.dispatch(logoutUser({}));
-  //   // TODO: Clear current Profile
+    // Logout user
+    store.dispatch(logoutUser({}));
+    // TODO: Clear current Profile
 
-  //   // Redirect to login
-  //   window.location.href = '/login';
-  // }
+    // Redirect to login
+    window.location.href = '/login';
+  }
 
 }
 
 function App() {
+
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>

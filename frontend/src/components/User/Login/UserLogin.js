@@ -9,16 +9,7 @@ import classnames from 'classnames';
 
 const UserLogin = (props) => {
 
-  const currentUser = useSelector(state => state.currentUser)
-  
-  if(currentUser.isAuthenticated && currentUser.user.isAdmin){
-    props.history.push('/dashboard/admin');
-  }else if(currentUser.isAuthenticated && !currentUser.user.isAdmin){
-    props.history.push('/dashboard/user');
-  }
-
   const errors = useSelector(state => state.currentUser.error)
-  // const loading = useSelector(state => state.currentUser.loading)
   const dispatch = useDispatch()
 
   const refNameInput = useRef(null);
@@ -40,7 +31,7 @@ const UserLogin = (props) => {
   return (
     <Container>
       <Row className="row justify-content-center mt-5">
-        <Form className="col-4">
+        <Form className="col-sm-8 col-md-6 col-lg-4">
           <Form.Group>
             <Form.Label>Felhasználónév</Form.Label>
             <Form.Control type="name" name="name" ref={refNameInput} className={classnames(" form-control", {

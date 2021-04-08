@@ -5,7 +5,7 @@ import storage from 'redux-persist/lib/storage'
 import userLoginReducer from './userLogin/userLoginReducer';
 import userRegisterReducer from './userRegister/userRegisterReducer';
 import topicReducer from './topic/topicReducer';
-import dashboardReducer from './dashboard/dashboardReducer';
+// import dashboardReducer from './dashboard/dashboardReducer';
 // import taskReducer from './task/taksReducer';
 
 const persistConfig = {
@@ -17,8 +17,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   currentUser: userLoginReducer,
   registerUser: userRegisterReducer,
-  topics: topicReducer,
-  dashboard: dashboardReducer
+  topics: topicReducer
 })
 
 export default persistReducer(persistConfig, rootReducer)

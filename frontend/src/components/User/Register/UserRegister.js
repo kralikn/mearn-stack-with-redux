@@ -44,7 +44,7 @@ const UserRegister = (props) => {
   return (
      <Container>
       <Row className="row justify-content-center mt-5">
-        <Form className="col-4">
+        <Form className="col-sm-8 col-md-6 col-lg-4">
           <Form.Group>
             <Form.Label>Felhasználónév</Form.Label>
             <Form.Control type="name" name="name" ref={refNameInput} className={classnames(" form-control", {

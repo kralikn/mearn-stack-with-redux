@@ -5,11 +5,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 // import TextAreaFieldGroup from './Elements/TextAreaFieldGroup';
 // import { addEvent } from '../../../../../redux'
-import { IoAddOutline } from "react-icons/io5";
-import { AiFillDelete } from 'react-icons/ai';
 // import { v4 as uuidv4 } from 'uuid';
 // import { nanoid } from 'nanoid'
 import { postTask } from '../../../../../redux';
+import ControlPanel from './Elements/ControlPanel';
+import EventTextField from './Elements/EventTextField';
+import CustomTable from './Elements/CustomTable';
 
 
 const CreateTask = () => {
@@ -18,31 +19,60 @@ const CreateTask = () => {
 
   const currentTopic = useSelector(state => state.topics.currentTopic)
   const currentTask = useSelector(state => state.topics.currentTask)
-  // console.log(currentTask._id)
   const [formData, setFormData] = useState({
     topicid: currentTopic._id,
     taskid: currentTask._id,
     title: currentTask.title,
     text: '',
-    events: [
-      {text: ''}
-    ],
+    events: [],
     tasks: []
   })
-  // console.log(formData)
+
+  // if(currentTask.text !== ''){
+  //   const newFormData = {...formData}
+  //   formData.text = currentTask.text
+  //   setFormData(newFormData)
+  // }
+  // if(currentTask.events.length > 0) {
+  //   const newFormData = {...formData}
+  //   // const eventList = [...formData.events]
+  //   newFormData.events = currentTask.events
+  //   setFormData({...formData})
+
+  // }
 
   useEffect(() => {
     if(localStorage.currentTaskFormData){
       setFormData(JSON.parse(localStorage.currentTaskFormData))
     }
+
+    if(currentTask.events.length > 0) {
+      const newFormData = {...formData}
+      currentTask.events.map(event => {
+        newFormData.events.push(event)
+      })
+      setFormData({...formData})
+    }
+
+    if(currentTask.tasks.length > 0) {
+      const newFormData = {...formData}
+      currentTask.tasks.map(task => {
+        newFormData.tasks.push(task)
+      })
+      setFormData({...formData})
+    }
+
+    if(currentTask.text !== ''){
+      const newFormData = {...formData}
+      newFormData.text = currentTask.text
+      setFormData(newFormData)
+    }
+
   }, [])
 
   useEffect(() => {
     localStorage.setItem('currentTaskFormData', JSON.stringify(formData));
   }, [formData])
-
-  // console.log(formData)
-  // console.log(localStorage.currentTaskFormData)
 
   const handleChangeEvents = (e, index) => {
     const eventList = [...formData.events]
@@ -81,15 +111,14 @@ const CreateTask = () => {
     const newTask = task
     newTask.rows.push({ssz:'', megnevezes: '', tartozik: '', kovetel: '', amount: ''})
     const newFormData = {...formData}
-    // newFormData.tasks[newFormData.tasks.findIndex(task => task.type === 'idosoros')].rows.push({ssz:'', megnevezes: '', tartozik: '', kovetel: '', amount: ''})
     setFormData(newFormData)
   }
 
-  // const handleAddTaskMerlegertek = () => {
-  //   const newFormData = {...formData}
-  //   formData.tasks.push({type: "merlegertek", value: ''})
-  //   setFormData(newFormData)
-  // }
+  const handleRemoveTaskIdosoros = (index) => {
+    let newFormData = {...formData}
+    newFormData.tasks.splice(index, 1)
+    setFormData(newFormData)
+  }
 
   const handleRemoveEvent = (index) => {
     const newFormData = {...formData}
@@ -109,13 +138,8 @@ const CreateTask = () => {
   }
 
   const handleSubmitTask = () => {
-    // console.log(formData)
     dispatch(postTask(formData))
   }
-
-  // if(!currentTopic){
-  //   return <h1>Loading...</h1>
-  // }
 
   return (
     <div className="task-editor-container">
@@ -128,9 +152,6 @@ const CreateTask = () => {
         Vissza
       </Link>
       <div className="editor">
-        {/* <div className="editor-header">
-          <h4 className="editor-header-title">{currentTopic.title}<span> - {currentTask.title}</span></h4>
-        </div> */}
         <div className="editor-form">
           <div className="custom-form-group">
             <label className="form-label">feladat címe</label>
@@ -157,172 +178,42 @@ const CreateTask = () => {
           </div>
            
           {formData.events.map((event, index) => {
+
             return (
-              <>
-                <div className="event-box">
-                  <div className="custom-form-group ">
-                    <label className="form-label">{index + 1}. gazdasági esemény</label>
-                    <textarea
-                      className="custom-input"
-                      type="text"
-                      rows={3}
-                      value={event.text}
-                      name="event"
-                      onChange={(e) => {
-                        handleChangeEvents(e, index)
-                      }}
-                    />
-                  </div>
-                  <div className="button-group">
-                    {formData.events.length - 1 === index && <Button
-                      size="sm"
-                      variant="success"
-                      onClick={handleAddEvent}
-                    >
-                      <IoAddOutline />
-                    </Button>}
-                    {formData.events.length !== 1 && <Button
-                      size="sm"
-                      variant="danger"
-                      onClick={() => handleRemoveEvent(index)}
-                    >
-                      <AiFillDelete />
-                    </Button>}
-                  </div>
-                </div>
-              </>
+              <EventTextField
+                event={event}
+                index={index}
+                formData={formData}
+                handleChangeEvents={handleChangeEvents}
+                handleAddEvent={handleAddEvent}
+                handleRemoveEvent={handleRemoveEvent}
+              />
             )
           })}
+
           <div className="custom-form-group">
-          {/* <label className="form-label">feladat: </label> */}
-          {formData.tasks.map((task, index) => {
-            if(task.type === "idosoros"){
-              return (
-                <>
-                  <textarea
-                    className="custom-input"
-                    // as="textarea"
-                    rows={3}
-                    name="task"
-                    value={task.text}
-                    type="text"
-                    onChange={(e) => {
-                      handleChangeIdosorosText(e, index)
-                    }}
+            {formData.tasks.map((task, index) => {
+              if(task.type === "idosoros"){
+                return (
+                  <CustomTable 
+                    task={task}
+                    index={index}
+                    handleChangeIdosorosText={handleChangeIdosorosText}
+                    handleChangeRow={handleChangeRow}
+                    handleAddRow={handleAddRow}
+                    handleRemoveRow={handleRemoveRow}
+                    handleRemoveTaskIdosoros={handleRemoveTaskIdosoros}
                   />
-                  <div className="table-box">
-                    <div className="custom-table-header">
-                      <div>Ssz.</div>
-                      <div>Gazdasági esemény megnevezése</div>
-                      <div>Tartozik</div>
-                      <div>Követel</div>
-                      <div>Összeg</div>
-                    </div>
-                    {task.rows.map((row, index) => {
-                      return (
-                        <div className="table-row">
-                          <div className="custom-table-row">
-                            <div>
-                              <input
-                                className="table-input"
-                                type="text"
-                                name="ssz"
-                                value={row.ssz}
-                                onChange={(e) => {
-                                  handleChangeRow(e, task, row, index)
-                                }}
-                              />
-                            </div>
-                            <div>
-                              <input
-                                className="table-input"
-                                type="text"
-                                name="megnevezes"
-                                value={row.megnevezes}
-                                onChange={(e) => {
-                                  handleChangeRow(e, task, row, index)
-                                }}
-                              />
-                            </div>
-                            <div>
-                              <input
-                                className="table-input"
-                                type="text"
-                                name="tartozik"
-                                value={row.tartozik}
-                                onChange={(e) => {
-                                  handleChangeRow(e, task, row, index)
-                                }}
-                              />
-                            </div>
-                            <div>
-                              <input
-                                className="table-input"
-                                type="text"
-                                name="kovetel"
-                                value={row.kovetel}
-                                onChange={(e) => {
-                                  handleChangeRow(e, task, row, index)
-                                }}
-                              />
-                            </div>
-                            <div>
-                              <input
-                                className="table-input"
-                                type="text"
-                                name="amount"
-                                value={row.amount}
-                                onChange={(e) => {
-                                  handleChangeRow(e, task, row, index)
-                                }}
-                              />
-                            </div>
-                          </div>
-                          <div className="button-group">
-                            {task.rows.length - 1 === index && <Button
-                              size="sm"
-                              variant="success"
-                              onClick={() => handleAddRow(task, index)}
-                            >
-                              <IoAddOutline />
-                            </Button>}
-                            {task.rows.length !== 1 && <Button
-                              size="sm"
-                              variant="danger"
-                              onClick={() => handleRemoveRow(task,index)}
-                            >
-                              <AiFillDelete />
-                            </Button>}
-                          </div>
-                        </div>
-                      )})}
-                  </div>
-                </>
-              )
-            }
-          })}
+                )
+              }
+            })}
           </div>
-          <div className="custom-form-group">
-            <p>feladatok hozzáadása</p>
-            <div className="added-button-group">
-              <Button
-                size="sm"
-                variant="success"
-                onClick={handleAddTaskIdosoros}
-              >
-                idősoros könyvelés
-              </Button>
-              {/* <Button
-                size="sm"
-                variant="success"
-                onClick={handleAddTaskMerlegertek}
-              >
-                Mérlegérték meghatározása
-              </Button> */}
-            </div>
-              
-            {/* </Form> */}
-          </div>
+
+          <ControlPanel
+            handleAddTaskIdosoros={handleAddTaskIdosoros}
+            handleAddEvent={handleAddEvent}
+          />
+
           <Button
             variant="danger"
             onClick={handleSubmitTask}
@@ -331,73 +222,73 @@ const CreateTask = () => {
           </Button>
           </div>
         </div>
-        <div className="showcase editor-dashboard">
-          <div className="showcase-header">
-            <h4 className="showcase-header-title">{currentTask.title}</h4>
-          </div>
-          <div className="showcase-content">
-            <div className="showcase-content-title">
-              <p>{formData.text}</p>
-            </div>
-            <div className="showcase-content-events">
-              <ol>
-                {formData.events.map(event => {
-                  return <li>{event.text}</li>
-                })}
-              </ol>
-            </div>
-            {formData.tasks.length > 0 && <p>Feladatok:</p>}
-            <div className="showcase-content-tasks">
-              <ol className="showcase-task-list">
-                {formData.tasks.map(task => {
-                  return (
-                    <li>
-                      <p>{task.value}</p>
-                      {task.type === 'idosoros' && task.value !== '' &&
-                        <div className="showcase-idosoros-table">
-                          <div className="custom-table-header">
-                            <div>Ssz.</div>
-                            <div>Gazdasági esemény megnevezése</div>
-                            <div>Tartozik</div>
-                            <div>Követel</div>
-                            <div>Összeg</div>
-                          </div>
-                          {task.rows.map(row => {
-                            return (
-                              <div className="custom-table-row">
-                                <div>
-                                  {row.ssz}
-                                </div>
-                                <div>
-                                  {row.megnevezes}
-                                </div>
-                                <div>
-                                  {row.tartozik}
-                                </div>
-                                <div>
-                                  {row.kovetel}
-                                </div>
-                                <div>
-                                  {row.amount}
-                                </div>
-                              </div>
-                            )
-                          })}
-                        </div>
-                      }
-                    </li>
-                  )
-                })}
-              </ol>
-            </div>
+      <div className="showcase editor-dashboard">
+        <div className="showcase-header">
+          <h4 className="showcase-header-title">{currentTask.title}</h4>
         </div>
-      
-        {/* <pre>
-            {JSON.stringify(formData, null, 2)}
-        </pre> */}
-
-
+        <div className="showcase-content">
+          <div className="showcase-content-title">
+            <p>{formData.text}</p>
+          </div>
+          <div className="showcase-content-events">
+            <ol>
+              {formData.events.map(event => {
+                return <li>{event.text}</li>
+              })}
+            </ol>
+          </div>
+          {formData.tasks.length > 0 && <p>Feladatok:</p>}
+          <div className="showcase-content-tasks">
+            <ol className="showcase-task-list">
+              {formData.tasks.map(task => {
+                return (
+                  <li>
+                    <p>{task.text}</p>
+                    {task.type === 'idosoros' && task.value !== '' &&
+                      <div className="showcase-idosoros-table">
+                        <div className="custom-table-header">
+                          <div>Ssz.</div>
+                          <div>Gazdasági esemény megnevezése</div>
+                          <div>Tartozik</div>
+                          <div>Követel</div>
+                          <div>Összeg</div>
+                        </div>
+                        {task.rows.map(row => {
+                          return (
+                            <div className="custom-table-row">
+                              <div>
+                                {row.ssz}
+                              </div>
+                              <div>
+                                {row.megnevezes}
+                              </div>
+                              <div>
+                                {row.tartozik}
+                              </div>
+                              <div>
+                                {row.kovetel}
+                              </div>
+                              <div>
+                                {row.amount}
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    }
+                  </li>
+                )
+              })}
+            </ol>
+          </div>
       </div>
+{/*     
+      <pre>
+          {JSON.stringify(formData, null, 2)}
+      </pre> */}
+
+
+    </div>
     </div>
   )
 }

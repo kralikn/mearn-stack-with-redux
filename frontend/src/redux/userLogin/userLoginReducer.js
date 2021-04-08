@@ -3,7 +3,8 @@ import isEmpty from '../../validation/is-empty'
 import {
   FETCH_USERLOGIN_REQUEST,
   FETCH_USERLOGIN_SUCCESS,
-  FETCH_USERLOGIN_FAILURE
+  FETCH_USERLOGIN_FAILURE,
+  SET_LOGOUT_USER
 } from './userLoginTypes'
 
 const initialState = {
@@ -34,6 +35,13 @@ const reducer = (state = initialState, action) => {
         loading: false,
         user: {},
         error: action.payload
+      }
+    case SET_LOGOUT_USER:
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: {},
+        error: {}
       }
     default: return state
   }
